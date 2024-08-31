@@ -1,3 +1,8 @@
+require 'yaml'
+require 'json'
+require 'logger'
+require 'ostruct'
+
 require_relative "version"
 
 module GSP

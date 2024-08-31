@@ -1,0 +1,45 @@
+PATH
+  remote: .
+  specs:
+    green_shed_press (0.1.0)
+      redcarpet
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    attr_extras (7.1.0)
+    concurrent-ruby (1.2.2)
+    debug (1.8.0)
+      irb (>= 1.5.0)
+      reline (>= 0.3.1)
+    diff-lcs (1.5.0)
+    io-console (0.6.0)
+    irb (1.7.3)
+      reline (>= 0.3.6)
+    optimist (3.1.0)
+    patience_diff (1.2.0)
+      optimist (~> 3.0)
+    rake (13.0.6)
+    redcarpet (3.6.0)
+    reline (0.3.6)
+      io-console (~> 0.5)
+    super_diff (0.10.0)
+      attr_extras (>= 6.2.4)
+      diff-lcs
+      patience_diff
+    tldr (0.9.5)
+      concurrent-ruby (~> 1.2)
+      super_diff (~> 0.10)
+
+PLATFORMS
+  arm64-darwin-21
+  arm64-darwin-22
+
+DEPENDENCIES
+  debug
+  green_shed_press!
+  rake
+  tldr
+
+BUNDLED WITH
+   2.4.19

@@ -2,6 +2,8 @@ module GSP
   class Page
     attr_reader :filename, :title, :body, :slug, :metadata, :created_at, :updated_at
 
+    include ArbitraryMetadatable
+
     def self.load(filename)
       data = File.open(filename).read
 
@@ -27,20 +29,6 @@ module GSP
       @metadata = args[:metadata]
       @created_at = args[:created_at]
       @updated_at = args[:updated_at]
-    end
-
-    private
-    # Allow metadata fields to be accessed like method calls with dot syntax
-    def method_missing(symbol, *args)
-      if @metadata.key?(symbol)
-        @metadata[symbol]
-      else
-        super
-      end
-    end
-
-    def respond_to_missing?(symbol, include_private = false)
-      @metadata.key?(symbol) || super
     end
 
 

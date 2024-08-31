@@ -2,3 +2,6 @@
 title: "Test Blog"
 base_url: "https://blog.example.com"
 description: "A blog for testing"
+
+metadata:
+  author: "Test Blog Author"

@@ -4,4 +4,6 @@ $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 
 require "green_shed_press"
 
-puts "Hello world"
+builder = GSP::Builder.new(data_directory: "./data", output_directory: "./output")
+builder.load
+builder.build

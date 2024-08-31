@@ -5,9 +5,17 @@ module GSP
     def initialize(data_directory:, output_directory:)
       @data_directory = data_directory
       @output_directory = output_directory
+
+      @pages = []
+      @posts = []
+      @micro_posts = []
+      @layouts = []
+
     end
 
     def load
+      LOGGER.debug "Builder#load"
+
       @site = Site.load(File.join(@data_directory, 'site.yml'))
 
       Dir.glob(File.join(@data_directory, 'posts', '*.md')).each do |file|
@@ -16,7 +24,7 @@ module GSP
       end
 
       Dir.glob(File.join(@data_directory, 'pages', '*.md')).each do |file|
-        page = Page.new(file)
+        page = Page.load(file)
         @pages << page
       end
 
@@ -26,14 +34,49 @@ module GSP
       end
 
       Dir.glob(File.join(@data_directory, "*.md")).each do |file|
-        @pages << Page.new(file)
+        @pages << Page.load(file)
+      end
+
+      Dir.glob(File.join(@data_directory, "*.erb")).each do |file|
+        @pages << Page.load(file)
+      end
+
+      Dir.glob(File.join(@data_directory, "_layouts", "*.erb")).each do |file|
+        @layouts << Layout.load(file)
       end
 
       true
     end
 
     def build
+      @pages.each do |page|
 
+        LOGGER.debug "Page body:\n\n#{page.body}\n\n"
+
+        context = OpenStruct.new(site: @site, page: page)
+
+        erb = ERB.new(page.body)
+
+        output = erb.result(context.instance_eval{ binding })
+
+        LOGGER.debug "File output:\n\n#{output}\n\n"
+
+        layout = @layouts.find { |l| l.name == page.layout } || @layouts.find{ |l| l.name == 'default' }
+
+        context = OpenStruct.new(site: @site, page: page, content: output)
+        erb = ERB.new(layout.body)
+        output = erb.result(context.instance_eval{ binding })
+
+        LOGGER.debug "Layout output:\n\n#{output}\n\n"
+
+        puts output_file_path(page)
+      end
+    end
+
+    private
+
+    def output_file_path(page)
+      File.join(@output_directory, page.filepath.gsub(@data_directory, '').gsub('.md', '.html').gsub('.erb', '.html'))
     end
 
   end

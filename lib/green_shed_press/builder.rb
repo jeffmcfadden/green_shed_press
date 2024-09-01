@@ -1,6 +1,6 @@
 module GSP
   class Builder
-    attr_reader :site, :pages, :posts, :micro_posts
+    attr_reader :site, :pages, :posts, :micro_posts, :renderer
 
     def initialize(data_directory:, output_directory:)
       @data_directory = data_directory
@@ -10,6 +10,7 @@ module GSP
       @posts = []
       @micro_posts = []
       @layouts = []
+
 
     end
 
@@ -41,10 +42,6 @@ module GSP
         @pages << Page.load(file)
       end
 
-      Dir.glob(File.join(@data_directory, "_layouts", "*.erb")).each do |file|
-        @layouts << Layout.load(file)
-      end
-
       true
     end
 
@@ -53,23 +50,11 @@ module GSP
 
         LOGGER.debug "Page body:\n\n#{page.body}\n\n"
 
-        context = OpenStruct.new(site: @site, page: page)
-
-        erb = ERB.new(page.body)
-
-        output = erb.result(context.instance_eval{ binding })
+        output = renderer.render(page, context: OpenStruct.new(site: @site, page: page ))
 
         LOGGER.debug "File output:\n\n#{output}\n\n"
 
-        layout = @layouts.find { |l| l.name == page.layout } || @layouts.find{ |l| l.name == 'default' }
-
-        context = OpenStruct.new(site: @site, page: page, content: output)
-        erb = ERB.new(layout.body)
-        output = erb.result(context.instance_eval{ binding })
-
-        LOGGER.debug "Layout output:\n\n#{output}\n\n"
-
-        puts output_file_path(page)
+        # puts output_file_path(page)
       end
     end
 
@@ -77,6 +62,10 @@ module GSP
 
     def output_file_path(page)
       File.join(@output_directory, page.filepath.gsub(@data_directory, '').gsub('.md', '.html').gsub('.erb', '.html'))
+    end
+
+    def renderer
+      @renderer ||= Renderer.new(data_directory: @data_directory, output_directory: @output_directory)
     end
 
   end

@@ -1,8 +1,10 @@
 module GSP
   class Page
+    include ArbitraryMetadatable
+    include Contentable
+
     attr_reader :filepath, :title, :body, :slug, :metadata, :created_at, :updated_at
 
-    include ArbitraryMetadatable
 
     def self.load(filepath)
       LOGGER.debug "Page#load #{filepath}"

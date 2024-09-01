@@ -1,10 +1,10 @@
 require 'erb'
-require 'yaml'
+require 'fileutils'
 require 'json'
 require 'logger'
 require 'ostruct'
 require 'redcarpet'
-require 'debug'
+require 'yaml'
 
 require_relative "version"
 require_relative "active_support/concern"
@@ -27,3 +27,4 @@ require_relative "green_shed_press/post"
 require_relative "green_shed_press/micro_post"
 require_relative "green_shed_press/builder"
 require_relative "green_shed_press/renderer"
+require_relative "green_shed_press/output_file_mapper"

@@ -10,6 +10,8 @@ module GSP
       @posts = []
       @micro_posts = []
       @layouts = []
+
+      @output_file_mapper = OutputFileMapper.new(data_directory: @data_directory, output_directory: @output_directory)
     end
 
     def load
@@ -18,7 +20,7 @@ module GSP
       @site = Site.load(File.join(@data_directory, 'site.yml'))
 
       Dir.glob(File.join(@data_directory, 'posts', '*.md')).each do |file|
-        post = Post.new(file)
+        post = Post.load(file)
         @posts << post
       end
 
@@ -28,7 +30,7 @@ module GSP
       end
 
       Dir.glob(File.join(@data_directory, 'micro_posts', '*.md')).each do |file|
-        micro_post = MicroPost.new(file)
+        micro_post = MicroPost.load(file)
         @micro_posts << micro_post
       end
 
@@ -44,23 +46,26 @@ module GSP
     end
 
     def build
-      @pages.each do |page|
+      LOGGER.debug "Builder#build"
+      [@pages, @posts].flatten.each do |contentable|
+        LOGGER.debug"  Builder#build rendering page #{contentable.filepath}"
+        output = renderer.render(contentable, context: OpenStruct.new(site: @site, page: contentable ))
 
-        LOGGER.debug "Page body:\n\n#{page.body}\n\n"
+        # Get the output filename
+        output_filename = @output_file_mapper.output_filename(filename: contentable.filepath)
 
-        output = renderer.render(page, context: OpenStruct.new(site: @site, page: page ))
+        # Make sure the Dir exists
+        FileUtils.mkdir_p(File.dirname(output_filename))
 
-        LOGGER.debug "File output:\n\n#{output}\n\n"
-
-        # puts output_file_path(page)
+        # Write the file contents
+        LOGGER.debug "Writing output file #{output_filename}"
+        File.open(output_filename, 'w') do |f|
+          f.write(output)
+        end
       end
     end
 
     private
-
-    def output_file_path(page)
-      File.join(@output_directory, page.filepath.gsub(@data_directory, '').gsub('.md', '.html').gsub('.erb', '.html'))
-    end
 
     def renderer
       @renderer ||= Renderer.new(data_directory: @data_directory, output_directory: @output_directory)

@@ -1,6 +1,6 @@
 module GSP
   class Builder
-    attr_reader :site, :pages, :posts, :micro_posts, :renderer
+    attr_reader :site, :pages, :posts, :micro_posts
 
     def initialize(data_directory:, output_directory:)
       @data_directory = data_directory

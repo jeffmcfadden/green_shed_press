@@ -3,6 +3,7 @@ require 'yaml'
 require 'json'
 require 'logger'
 require 'ostruct'
+require 'redcarpet'
 
 require_relative "version"
 

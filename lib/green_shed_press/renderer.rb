@@ -22,7 +22,7 @@ module GSP
       output = _render(contentable, context)
 
       if contentable.layout
-        LOGGER.debug "Layout: #{contentable.layout}"
+        LOGGER.debug "contentable.layout: #{contentable.layout}"
         context.content = output
         output = _render(@layouts[contentable.layout], context)
       end
@@ -36,7 +36,12 @@ module GSP
     # @param [GSP::Contentable] contentable
     # @param [OpenStruct] context the context to render the contentable in
     def _render(contentable, context)
-      ERB.new(contentable.body).result(context.instance_eval{ binding })
+      body = contentable.body
+      if contentable.filepath.include?(".md")
+        body = markdown.render(body)
+      end
+
+      ERB.new(body).result(context.instance_eval{ binding })
     end
 
     def markdown

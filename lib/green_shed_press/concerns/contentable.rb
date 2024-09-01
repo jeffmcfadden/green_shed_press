@@ -15,7 +15,11 @@ module GSP
     # Expected to be overridden by including class
     # @return [GSP::Layout, nil] the layout of the Contentable object
     def layout
-      nil
+      if @metadata
+        @metadata[:layout]
+      else
+        nil
+      end
     end
 
     private

@@ -2,7 +2,7 @@ module GSP
   class Layout
     attr_reader :name, :filepath, :body, :metadata
 
-    include ArbitraryMetadatable
+    include Frontmatterable
 
     def self.load(filepath)
       LOGGER.debug "Layout#load #{filepath}"

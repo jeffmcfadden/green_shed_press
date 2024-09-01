@@ -2,8 +2,6 @@ require 'yaml'
 
 module GSP
   class Site
-    include ArbitraryMetadatable
-
     attr_reader :title, :base_url, :description, :posts, :pages, :micro_posts, :metadata
 
     # @return [GSP::Site]
@@ -22,6 +20,17 @@ module GSP
       @micro_posts = args[:micro_posts] || []
       @metadata = args[:metadata] || {}
     end
+
+    private
+
+    def method_missing(symbol, *args)
+      @metadata&.dig(symbol) || super
+    end
+
+    def respond_to_missing?(symbol, include_private = false)
+      @metadata&.dig(symbol) || super
+    end
+
 
   end
 end

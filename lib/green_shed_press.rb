@@ -4,17 +4,23 @@ require 'json'
 require 'logger'
 require 'ostruct'
 require 'redcarpet'
+require 'debug'
 
 require_relative "version"
+require_relative "active_support/concern"
 
 module GSP
   class Error < StandardError; end
   LOGGER = Logger.new($stdout)
   LOGGER.level = Logger::DEBUG
 end
-require_relative "green_shed_press/concerns/arbitrary_metadatable"
+require_relative "green_shed_press/concerns/frontmatterable"
+require_relative "green_shed_press/concerns/content_loadable"
 require_relative "green_shed_press/concerns/contentable"
 require_relative "green_shed_press/site"
+require_relative "green_shed_press/content_body_extractor"
+require_relative "green_shed_press/frontmatter"
+require_relative "green_shed_press/frontmatter_extrator"
 require_relative "green_shed_press/layout"
 require_relative "green_shed_press/page"
 require_relative "green_shed_press/post"

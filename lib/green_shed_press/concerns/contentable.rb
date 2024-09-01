@@ -1,32 +1,25 @@
 module GSP
   module Contentable
-    def self.included(base)
-      base.extend(ClassMethods)
-    end
+    extend ActiveSupport::Concern
 
-    # Returns the body of the Contentable object
-    # @note: Expected to be overridden by including class
-    # @return [String] the body of the Contentable object
-    def body
-      ""
+    include ContentLoadable
+    include Frontmatterable
+
+    included do
+      attr_reader :filepath, :frontmatter, :title, :body,  :slug, :created_at, :updated_at
     end
 
     # Returns the layout of the Contentable object, if it exists
     # Expected to be overridden by including class
     # @return [GSP::Layout, nil] the layout of the Contentable object
     def layout
-      if @metadata
-        @metadata[:layout]
+      if @frontmatter
+        @frontmatter[:layout]
       else
         nil
       end
     end
 
-    private
-
-    module ClassMethods
-
-    end
 
   end
 end

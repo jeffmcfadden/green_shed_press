@@ -10,8 +10,6 @@ module GSP
       @posts = []
       @micro_posts = []
       @layouts = []
-
-
     end
 
     def load

@@ -4,6 +4,7 @@ require 'json'
 require 'logger'
 require 'ostruct'
 require 'redcarpet'
+require 'time'
 require 'yaml'
 
 require_relative "version"
@@ -14,6 +15,7 @@ module GSP
   LOGGER = Logger.new($stdout)
   LOGGER.level = Logger::DEBUG
 end
+
 require_relative "green_shed_press/concerns/frontmatterable"
 require_relative "green_shed_press/concerns/content_loadable"
 require_relative "green_shed_press/concerns/contentable"

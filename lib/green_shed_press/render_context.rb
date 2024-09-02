@@ -14,6 +14,16 @@ module GSP
       ERB.new(partial_template).result(binding)
     end
 
+    def link_to(text, object_or_url)
+      if object_or_url.respond_to?(:url)
+        url = object_or_url.url
+      else
+        url = object_or_url.to_s
+      end
+
+      "<a href='#{url}'>#{text}</a>"
+    end
+
     private
 
     def respond_to_missing?(symbol, include_private = false)

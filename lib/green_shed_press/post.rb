@@ -12,5 +12,9 @@ module GSP
       @updated_at = args[:updated_at]
     end
 
+    def url
+      "/posts/#{self.filepath.split("/").last.split(".").first}.html"
+    end
+
   end
 end

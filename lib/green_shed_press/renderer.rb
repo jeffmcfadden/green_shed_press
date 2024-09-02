@@ -17,20 +17,23 @@ module GSP
 
     # Render the contentable with the given context
     # @param [GSP::Contentable] contentable
-    # @param [OpenStruct] context the context to render the contentable in
+    # @param [OpenStruct] context (local assigns, essentially) for the render
     def render(contentable, context: OpenStruct.new)
-      render_context = RenderContext.new(context, base_dir: @data_directory)
-
       body = contentable.body
       if contentable.filepath.include?(".md")
         body = markdown.render(body)
       end
 
+      # Render any ERB in the body
+      render_context = RenderContext.new(context, base_dir: @data_directory)
       new_content = ERB.new(body).result(render_context.instance_eval{ binding })
 
+      # If this contentable has a layout, render the layout, with the latest output as the `content`
       LOGGER.debug "contentable.layout: #{contentable.layout}"
       if contentable.layout
         context.content = new_content
+
+        # Recursive calls for nested layouts
         new_content = render(@layouts[contentable.layout], context: context)
       end
 
@@ -39,17 +42,6 @@ module GSP
 
 
     private
-
-    # @param [GSP::Contentable] contentable
-    # @param [RenderContext] context the context to render the contentable in
-    def _render(contentable, context)
-      body = contentable.body
-      if contentable.filepath.include?(".md")
-        body = markdown.render(body)
-      end
-
-      ERB.new(body).result(context.instance_eval{ binding })
-    end
 
     def markdown
       @markdown ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)

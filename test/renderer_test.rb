@@ -37,7 +37,7 @@ class RendererTest < TLDR
 
     output = renderer.render(page, context: OpenStruct.new(site: site, page: page ))
 
-    expected_body = "<!doctype html>\n<html>\n<head>\n  <title>I have a layout</title>\n</head>\n<body>\n<p>This is a simple page that uses a layout.</p>\n\n</body>\n</html>"
+    expected_body = "<!doctype html>\n<html>\n<head>\n  <title>I have a layout</title>\n\n  <meta property=\"og:title\" content=\"I have a layout\" />\n<meta property=\"og:image\" content=\"\" />\n\n\n</head>\n<body>\n<p>This is a simple page that uses a layout.</p>\n\n</body>\n</html>"
 
     assert_equal expected_body, output.strip
   end

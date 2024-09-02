@@ -19,12 +19,13 @@ module GSP
     # @param [GSP::Contentable] contentable
     # @param [OpenStruct] context the context to render the contentable in
     def render(contentable, context: OpenStruct.new)
-      output = _render(contentable, context)
+      render_context = RenderContext.new(context, base_dir: @data_directory)
+      output = _render(contentable, render_context)
 
       if contentable.layout
         LOGGER.debug "contentable.layout: #{contentable.layout}"
         context.content = output
-        output = _render(@layouts[contentable.layout], context)
+        output = _render(@layouts[contentable.layout], render_context)
       end
 
       output
@@ -34,7 +35,7 @@ module GSP
     private
 
     # @param [GSP::Contentable] contentable
-    # @param [OpenStruct] context the context to render the contentable in
+    # @param [RenderContext] context the context to render the contentable in
     def _render(contentable, context)
       body = contentable.body
       if contentable.filepath.include?(".md")

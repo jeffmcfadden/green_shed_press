@@ -12,5 +12,13 @@ module GSP
       @updated_at = args[:updated_at]
     end
 
+    def og_title
+      @title
+    end
+
+    def og_image
+      ""
+    end
+
   end
 end

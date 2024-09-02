@@ -3,6 +3,7 @@ PATH
   specs:
     green_shed_press (0.1.0)
       redcarpet
+      webrick
 
 GEM
   remote: https://rubygems.org/
@@ -30,6 +31,7 @@ GEM
     tldr (0.9.5)
       concurrent-ruby (~> 1.2)
       super_diff (~> 0.10)
+    webrick (1.7.0)
 
 PLATFORMS
   arm64-darwin-21

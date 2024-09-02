@@ -20,15 +20,21 @@ module GSP
     # @param [OpenStruct] context the context to render the contentable in
     def render(contentable, context: OpenStruct.new)
       render_context = RenderContext.new(context, base_dir: @data_directory)
-      output = _render(contentable, render_context)
 
-      if contentable.layout
-        LOGGER.debug "contentable.layout: #{contentable.layout}"
-        context.content = output
-        output = _render(@layouts[contentable.layout], render_context)
+      body = contentable.body
+      if contentable.filepath.include?(".md")
+        body = markdown.render(body)
       end
 
-      output
+      new_content = ERB.new(body).result(render_context.instance_eval{ binding })
+
+      LOGGER.debug "contentable.layout: #{contentable.layout}"
+      if contentable.layout
+        context.content = new_content
+        new_content = render(@layouts[contentable.layout], context: context)
+      end
+
+      new_content
     end
 
 

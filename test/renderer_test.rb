@@ -42,5 +42,17 @@ class RendererTest < TLDR
     assert_equal expected_body, output.strip
   end
 
+  def test_rendering_nested_layouts
+    renderer = GSP::Renderer.new(data_directory: "test/data/test_site_01", output_directory: @tmpdir)
+    page = GSP::Page.load("test/data/test_site_01/pages/page_with_nested_layout.md")
+    site = GSP::Site.load("test/data/test_site_01/site.yml")
+
+    output = renderer.render(page, context: OpenStruct.new(site: site, page: page ))
+
+    expected_body = "<!doctype html>\n<html>\n<head>\n  <title>I have nested layouts</title>\n</head>\n<body>\n  <article>\n  <h1>I have nested layouts</h1>\n  <p>This is a page that uses nested layouts.</p>\n\n</article>\n</body>\n</html>"
+
+    assert_equal expected_body, output.strip
+  end
+
 
 end

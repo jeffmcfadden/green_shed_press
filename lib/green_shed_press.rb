@@ -5,6 +5,7 @@ require 'logger'
 require 'ostruct'
 require 'redcarpet'
 require 'time'
+require 'webrick'
 require 'yaml'
 
 require_relative "version"

@@ -2,8 +2,42 @@
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 
+require "optionparser"
 require "green_shed_press"
 
-builder = GSP::Builder.new(data_directory: "./data", output_directory: "./output")
+options = {}
+options_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: gsp [options]"
+
+  opts.on("-d", "--data [DIRECTORY]", "The directory where the data files are stored") do |directory|
+    options[:data_directory] = directory
+  end
+
+  opts.on("-o", "--output [DIRECTORY]", "The directory where the output files are stored") do |directory|
+    options[:output_directory] = directory
+  end
+
+  opts.on("-s", "--server", "Start a server to preview the site") do
+    options[:server] = true
+  end
+
+  opts.on("-h", "--help", "Prints this help") do
+    puts opts
+    exit
+  end
+end.parse!
+
+data_directory   = options[:output_directory] || "./data"
+output_directory = options[:output_directory] || "./output"
+
+builder = GSP::Builder.new(data_directory: data_directory, output_directory: output_directory)
 builder.load
 builder.build
+
+if options[:server]
+  puts "Starting server at http://localhost:9090"
+  root = File.expand_path output_directory
+  server = WEBrick::HTTPServer.new :Port => 9090, :DocumentRoot => root
+  trap 'INT' do server.shutdown end
+  server.start
+end

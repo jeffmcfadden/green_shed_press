@@ -10,6 +10,9 @@ module GSP
       @slug = args[:slug]
       @created_at = args[:created_at]
       @updated_at = args[:updated_at]
+
+      @frontmatter.layout ||= "post"
+
     end
 
     def url

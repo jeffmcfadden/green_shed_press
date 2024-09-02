@@ -47,7 +47,7 @@ module GSP
         output = renderer.render(contentable, context: OpenStruct.new(site: @site, page: contentable ))
 
         # Get the output filename
-        output_filename = @output_file_mapper.output_filename(filename: contentable.filepath)
+        output_filename = @output_file_mapper.output_filename(filename: contentable.output_filepath)
 
         # Make sure the Dir exists
         FileUtils.mkdir_p(File.dirname(output_filename))

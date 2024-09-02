@@ -20,6 +20,10 @@ module GSP
       end
     end
 
+    def output_filepath
+      @filepath
+    end
+
 
   end
 end

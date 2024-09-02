@@ -16,8 +16,13 @@ module GSP
     end
 
     def url
-      "/posts/#{self.filepath.split("/").last.split(".").first}.html"
+      "#{self.output_filepath}"
     end
+
+    def output_filepath
+      "/posts/#{self.title.downcase.gsub(" ", "_")}.html"
+    end
+
 
   end
 end

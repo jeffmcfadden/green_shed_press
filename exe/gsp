@@ -30,9 +30,19 @@ end.parse!
 data_directory   = options[:output_directory] || "./data"
 output_directory = options[:output_directory] || "./output"
 
+
 builder = GSP::Builder.new(data_directory: data_directory, output_directory: output_directory)
+
+build_load_start_time = Time.now
 builder.load
+build_load_time = Time.now - build_load_start_time
+
+build_start_time = Time.now
 builder.build
+build_time = Time.now - build_start_time
+
+puts "Load time: #{build_load_time.to_f.round(3)}s"
+puts "Build time: #{build_time.to_f.round(3)}s"
 
 if options[:server]
   puts "Starting server at http://localhost:9090"

@@ -1,7 +1,7 @@
 module GSP
   class RenderContext
 
-    # @param local_assigns [OpenStruct]
+    # @param local_assigns [OpenStruct] local variables to make available in the context
     def initialize(local_assigns, base_dir: "./")
       @local_assigns = local_assigns
       @base_dir = base_dir

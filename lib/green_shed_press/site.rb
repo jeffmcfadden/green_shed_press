@@ -2,7 +2,7 @@ require 'yaml'
 
 module GSP
   class Site
-    attr_reader :title, :base_url, :description, :posts, :pages, :micro_posts, :metadata
+    attr_reader :title, :base_url, :description, :posts, :pages, :micro_posts, :photos, :metadata
 
     # @return [GSP::Site]
     def self.load(filename)
@@ -17,6 +17,7 @@ module GSP
       @description = args[:description]
       @posts = args[:posts] || []
       @pages = args[:pages] || []
+      @photos = args[:photos] || []
       @micro_posts = args[:micro_posts] || []
       @metadata = args[:metadata] || {}
     end

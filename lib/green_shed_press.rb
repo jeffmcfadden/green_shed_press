@@ -6,6 +6,7 @@ require 'ostruct'
 require 'redcarpet'
 require 'time'
 require 'webrick'
+require 'vips'
 require 'yaml'
 
 require_relative "version"
@@ -26,6 +27,7 @@ require_relative "green_shed_press/frontmatter"
 require_relative "green_shed_press/frontmatter_extrator"
 require_relative "green_shed_press/layout"
 require_relative "green_shed_press/page"
+require_relative "green_shed_press/photo"
 require_relative "green_shed_press/post"
 require_relative "green_shed_press/micro_post"
 require_relative "green_shed_press/builder"

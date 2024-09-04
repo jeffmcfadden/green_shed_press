@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "redcarpet"
   s.add_dependency "webrick"
+  s.add_dependency "ruby-vips"
 
   s.add_development_dependency "debug"
   s.add_development_dependency "tldr"

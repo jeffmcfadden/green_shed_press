@@ -18,6 +18,10 @@ class SiteGenerationTest < TLDR
     assert_equal true, File.exist?(File.join(@tmpdir, "static_test.txt"))
   end
 
+  def test_assets_written
+    assert_equal true, File.exist?(File.join(@tmpdir, "assets", "main.css"))
+  end
+
   def test_site_yml_skipped
     assert_equal false, File.exist?(File.join(@tmpdir, "site.yml"))
   end

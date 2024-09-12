@@ -9,6 +9,9 @@ module GSP
       file.relative_path.start_with?("/pages")
     end
 
+    def generate(output_directory:)
+    end
+
     def title
       return @title if defined?(@title)
 

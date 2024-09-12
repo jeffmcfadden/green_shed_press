@@ -9,6 +9,9 @@ module GSP
       file.relative_path.start_with?("/posts")
     end
 
+    def generate(output_directory:)
+    end
+
     def url
       "#{self.output_filepath}"
     end

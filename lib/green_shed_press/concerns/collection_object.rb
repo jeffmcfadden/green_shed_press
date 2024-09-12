@@ -13,8 +13,6 @@ module GSP
     extend ActiveSupport::Concern
 
     included do
-      attr_reader :file
-
       GSP.register_collection_object_type(self)
     end
 
@@ -33,6 +31,15 @@ module GSP
     # @param [GSPFile] file
     def initialize(file:)
       @file = file
+    end
+
+    # @return [GSPFile] file wrapper for this object
+    def file
+      @file
+    end
+
+    def generate(output_directory:)
+      raise NotImplementedError, "You must implement generate in your collection object. (#{self.class})"
     end
 
   end

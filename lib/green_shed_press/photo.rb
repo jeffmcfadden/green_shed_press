@@ -10,6 +10,9 @@ module GSP
       @filepath = filepath
     end
 
+    def generate(output_directory:)
+    end
+
     def output_filepath
       @filepath
     end

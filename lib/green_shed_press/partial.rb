@@ -13,5 +13,8 @@ module GSP
       file.relative_path.start_with?("/_partials")
     end
 
+    def generate(output_directory:)
+    end
+
   end
 end

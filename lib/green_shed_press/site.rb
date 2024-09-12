@@ -6,6 +6,8 @@ module GSP
 
     attr_accessor :data_directory
 
+    FILES_TO_SKIP = ["site.yml"]
+
     def initialize(config:, data_directory: nil)
       if config.is_a?(String)
         @data_directory = File.expand_path(File.dirname(config))
@@ -32,6 +34,7 @@ module GSP
       Dir.glob(File.join(self.data_directory, '**', '*')).each do |file|
         next if File.directory?(file)
         next if File.basename(file).start_with?(".")
+        next if FILES_TO_SKIP.include?(File.basename(file))
 
         @files << GSPFile.new(path: file, site: self)
       end
@@ -56,8 +59,12 @@ module GSP
       true
     end
 
-    def generate
-      @files.each(&:process)
+    def generate(output_directory:)
+      @collection_objects.each do |type, objects|
+        objects.each do |object|
+          object.generate(output_directory: output_directory)
+        end
+      end
     end
 
     # The default collections:

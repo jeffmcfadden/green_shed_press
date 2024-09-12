@@ -1,18 +1,11 @@
 module GSP
   class Post
-    include Contentable
+    include CollectionObject
+    include Frontmatterable
+    include Bodyable
 
-    def initialize(**args)
-      @filepath = args[:filepath]
-      @frontmatter = args[:frontmatter]
-      @body = args[:body]
-      @title = args[:title]
-      @slug = args[:slug]
-      @created_at = args[:created_at]
-      @updated_at = args[:updated_at]
-
-      @frontmatter.layout ||= "post"
-
+    def self.has_collection_object?(file:)
+      file.relative_path.start_with?("/posts")
     end
 
     def url

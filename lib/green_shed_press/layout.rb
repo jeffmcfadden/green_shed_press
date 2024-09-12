@@ -1,18 +1,12 @@
 module GSP
   class Layout
-    attr_reader :name, :filepath, :body
+    include CollectionObject
+    include Frontmatterable
+    include Bodyable
 
-    include Contentable
-
-
-    def initialize(**args)
-      @filepath = args[:filepath]
-      @name = args[:name]
-      @body = args[:body]
-
-      @frontmatter = args[:frontmatter]
+    def self.has_collection_object?(file:)
+      file.relative_path.start_with?("/_layouts")
     end
-
 
   end
 end

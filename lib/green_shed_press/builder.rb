@@ -14,6 +14,22 @@ module GSP
 
       @site = Site.load(File.join(@data_directory, 'site.yml'))
 
+      @files = []
+      Dir.glob(File.join(@data_directory, '**', '*')).each do |file|
+        @files << GSPFile.new(path: file)
+      end
+
+      true
+    end
+    def build
+      @files.each(&:process)
+    end
+
+    def old_load
+      LOGGER.debug "Builder#old_load"
+
+      @site = Site.load(File.join(@data_directory, 'site.yml'))
+
       Dir.glob(File.join(@data_directory, 'posts', '*.md')).each do |file|
         post = Post.load(file)
         @site.posts << post
@@ -50,8 +66,8 @@ module GSP
       true
     end
 
-    def build
-      LOGGER.debug "Builder#build"
+    def old_build
+      LOGGER.debug "Builder#old_build"
 
       build_pages
       build_photos
@@ -96,6 +112,12 @@ module GSP
         [2048, 1024, 800, 600, 400, 200].each do |size|
           LOGGER.debug "  Builder#build rendering photo #{photo.filepath} at size #{size}"
           output_filepath = File.join(output_directory, "#{basename}_#{size}.jpg")
+
+          if File.exist?(output_filepath)
+            LOGGER.debug "  Builder#build skipping photo #{photo.filepath} at size #{size} because it already exists"
+            next
+          end
+
           image = Vips::Image.new_from_file photo.filepath
 
           # Remove the EXIF fields we don't want present in the thumbnails, like location data, and the

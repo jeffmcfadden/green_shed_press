@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     green_shed_press (0.1.0)
+      activesupport
       redcarpet
       ruby-vips
       webrick
@@ -9,17 +10,35 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (7.1.4)
+      base64
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      mutex_m
+      tzinfo (~> 2.0)
     attr_extras (7.1.0)
+    base64 (0.2.0)
+    bigdecimal (3.1.8)
     concurrent-ruby (1.2.2)
+    connection_pool (2.4.1)
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
     diff-lcs (1.5.0)
+    drb (2.2.1)
     ffi (1.17.0-arm64-darwin)
+    i18n (1.14.5)
+      concurrent-ruby (~> 1.0)
     io-console (0.6.0)
     irb (1.7.3)
       reline (>= 0.3.6)
     logger (1.6.1)
+    minitest (5.25.1)
+    mutex_m (0.2.0)
     optimist (3.1.0)
     patience_diff (1.2.0)
       optimist (~> 3.0)
@@ -37,6 +56,8 @@ GEM
     tldr (0.9.5)
       concurrent-ruby (~> 1.2)
       super_diff (~> 0.10)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
     webrick (1.7.0)
 
 PLATFORMS

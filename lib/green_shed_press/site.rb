@@ -2,25 +2,94 @@ require 'yaml'
 
 module GSP
   class Site
-    attr_reader :title, :base_url, :description, :posts, :pages, :micro_posts, :photos, :metadata
+    attr_reader :title, :base_url, :description, :metadata, :files
 
-    # @return [GSP::Site]
-    def self.load(filename)
-      data = YAML.load_file(filename, symbolize_names: true)
+    attr_accessor :data_directory
 
-      new(**data)
+    def initialize(config:, data_directory: nil)
+      if config.is_a?(String)
+        @data_directory = File.expand_path(File.dirname(config))
+        config = YAML.load_file(config, symbolize_names: true)
+      elsif config.is_a?(File)
+        @data_directory = File.expand_path(File.dirname(config))
+        config = YAML.load_file(config.path, symbolize_names: true)
+      elsif config.is_a?(Hash)
+        @data_directory = data_directory
+      end
+
+      @title = config[:title]
+      @base_url = config[:base_url]
+      @description = config[:description]
+      @metadata = config[:metadata] || {}
+
+      @collection_objects = {}
     end
 
-    def initialize(**args)
-      @title = args[:title]
-      @base_url = args[:base_url]
-      @description = args[:description]
-      @posts = args[:posts] || []
-      @pages = args[:pages] || []
-      @photos = args[:photos] || []
-      @micro_posts = args[:micro_posts] || []
-      @metadata = args[:metadata] || {}
+    def load
+      LOGGER.debug "Site#load"
+
+      @files = []
+      Dir.glob(File.join(self.data_directory, '**', '*')).each do |file|
+        next if File.directory?(file)
+        next if File.basename(file).start_with?(".")
+
+        @files << GSPFile.new(path: file, site: self)
+      end
+
+      GSP.collection_object_types.each do |type|
+        @collection_objects[type.name] = []
+      end
+
+      @files.each do |file|
+        GSP.collection_object_types.each do |type|
+          if type.has_collection_object?(file: file)
+            collection_object = type.collection_object(file: file)
+            @collection_objects[type.name] << collection_object
+            break
+          end
+        end
+
+        # Static files are a special case
+        @collection_objects["GSP::StaticFile"] << GSP::StaticFile.collection_object(file: file)
+      end
+
+      true
     end
+
+    def generate
+      @files.each(&:process)
+    end
+
+    # The default collections:
+
+    def partials
+      @collection_objects["GSP::Partial"] || []
+    end
+
+    def layouts
+      @collection_objects["GSP::Layout"] || []
+    end
+
+    def posts
+      @collection_objects["GSP::Post"] || []
+    end
+
+    def pages
+      @collection_objects["GSP::Page"] || []
+    end
+
+    def micro_posts
+      @collection_objects["GSP::MicroPost"] || []
+    end
+
+    def photos
+      @collection_objects["GSP::Photo"] || []
+    end
+
+    def static_files
+      @collection_objects["GSP::StaticFile"] || []
+    end
+
 
     private
 

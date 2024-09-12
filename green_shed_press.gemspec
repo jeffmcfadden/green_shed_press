@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.bindir = "exe"
   s.executables << "gsp"
 
+  s.add_dependency "activesupport"
   s.add_dependency "redcarpet"
   s.add_dependency "webrick"
   s.add_dependency "ruby-vips"

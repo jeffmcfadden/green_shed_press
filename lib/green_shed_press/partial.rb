@@ -1,19 +1,11 @@
 module GSP
-  class Page
+  class Partial
     include CollectionObject
     include Frontmatterable
     include Bodyable
 
     def self.has_collection_object?(file:)
-      file.relative_path.start_with?("/pages")
-    end
-
-    def og_title
-      @title
-    end
-
-    def og_image
-      ""
+      file.relative_path.start_with?("/_partials")
     end
 
   end

@@ -13,11 +13,19 @@ module GSP
     end
 
     def method_missing(symbol, *args)
-      self.frontmatter&.dig(symbol) || super
+      if self.frontmatter&.respond_to?(symbol)
+        self.frontmatter.send(symbol, *args)
+      else
+        super
+      end
     end
 
     def respond_to_missing?(symbol, include_private = false)
-      self.frontmatter&.dig(symbol) || super
+      if self.frontmatter&.respond_to?(symbol)
+        true
+      else
+        super
+      end
     end
 
   end

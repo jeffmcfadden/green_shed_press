@@ -9,7 +9,10 @@ require 'webrick'
 require 'vips'
 require 'yaml'
 
+require "active_support"
+require "active_support/core_ext"
 require "active_support/concern"
+require "active_support/inflector"
 
 require_relative "version"
 
@@ -23,6 +26,7 @@ require_relative "green_shed_press/concerns/bodyable"
 require_relative "green_shed_press/concerns/frontmatterable"
 require_relative "green_shed_press/concerns/content_loadable"
 require_relative "green_shed_press/concerns/contentable"
+require_relative "green_shed_press/concerns/layoutable"
 require_relative "green_shed_press/site"
 require_relative "green_shed_press/collection_object"
 require_relative "green_shed_press/content_body_extractor"

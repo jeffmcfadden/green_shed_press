@@ -66,8 +66,16 @@ module GSP
       @collection_objects["GSP::Partial"] || []
     end
 
+    def partial(named:)
+      partials.find { |partial| partial.name == named }
+    end
+
     def layouts
       @collection_objects["GSP::Layout"] || []
+    end
+
+    def layout(named:)
+      layouts.find { |layout| layout.name == named }
     end
 
     def posts
@@ -76,6 +84,10 @@ module GSP
 
     def pages
       @collection_objects["GSP::Page"] || []
+    end
+
+    def page(titled:)
+      pages.find { |page| page.title == titled }
     end
 
     def micro_posts

@@ -8,9 +8,7 @@ module GSP
     end
 
     def partial(partial_name)
-      partial_name = partial_name.to_s
-      partial_path = File.join(@base_dir, "_partials", "#{partial_name}.html.erb")
-      partial_template = File.read(partial_path)
+      partial_template = site.partial(named: partial_name).file.content
       ERB.new(partial_template).result(binding)
     end
 

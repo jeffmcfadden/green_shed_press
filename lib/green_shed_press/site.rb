@@ -59,7 +59,19 @@ module GSP
       true
     end
 
+    def render
+      renderer = GSP::Renderer.new(site: self)
+      @collection_objects.each do |type, objects|
+        objects.each do |object|
+          next unless object.class.include?(Bodyable)
+          next unless object.renderable?
+          object.body = renderer.render(object, context: OpenStruct.new(page: object))
+        end
+      end
+    end
+
     def generate(output_directory:)
+      output_directory = File.expand_path(output_directory)
       @collection_objects.each do |type, objects|
         objects.each do |object|
           object.generate(output_directory: output_directory)

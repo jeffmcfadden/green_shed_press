@@ -31,18 +31,23 @@ data_directory   = options[:output_directory] || "./data"
 output_directory = options[:output_directory] || "./output"
 
 
-builder = GSP::Builder.new(data_directory: data_directory, output_directory: output_directory)
+site = GSP::Site.new(config: File.join(data_directory, "site.yml"))
 
-build_load_start_time = Time.now
-builder.load
-build_load_time = Time.now - build_load_start_time
+site_load_start_time = Time.now
+site.load
+site_load_time = Time.now - site_load_start_time
 
-build_start_time = Time.now
-builder.build
-build_time = Time.now - build_start_time
+process_start_time = Time.now
+site.process
+process_time = Time.now - process_start_time
 
-puts "Load time: #{build_load_time.to_f.round(3)}s"
-puts "Build time: #{build_time.to_f.round(3)}s"
+generate_start_time = Time.now
+site.generate(output_directory: output_directory)
+generate_time = Time.now - generate_start_time
+
+puts "Load time: #{site_load_time.to_f.round(3)}s"
+puts "Process time: #{process_time.to_f.round(3)}s"
+puts "Generate time: #{generate_time.to_f.round(3)}s"
 
 if options[:server]
   puts "Starting server at http://localhost:9090"

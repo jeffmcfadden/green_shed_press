@@ -25,7 +25,7 @@ module GSP
 
       # If this contentable has a layout, render the layout, with the latest output as the `content`
       LOGGER.debug "bodyable.layout: #{bodyable.layout}"
-      if bodyable.try(:layout)
+      if bodyable.layout
         context.content = new_content
 
         # Recursive calls for nested layouts

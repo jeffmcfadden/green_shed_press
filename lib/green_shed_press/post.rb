@@ -10,6 +10,10 @@ module GSP
     end
 
     def generate(output_directory:)
+      FileUtils.mkdir_p(File.join(output_directory, "/posts"))
+      File.open(File.join(output_directory, self.output_filepath), "w") do |file|
+        file.write(self.body)
+      end
     end
 
     def url

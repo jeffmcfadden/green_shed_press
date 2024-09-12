@@ -4,6 +4,7 @@ class SiteGenerationTest < TLDR
     @data_directory = File.join("test", "data", "test_site_01")
     @site = GSP::Site.new(config: File.join(@data_directory, "site.yml"))
     @site.load
+    @site.render
 
     @tmpdir = Dir.mktmpdir
     @site.generate(output_directory: @tmpdir)
@@ -24,6 +25,14 @@ class SiteGenerationTest < TLDR
 
   def test_site_yml_skipped
     assert_equal false, File.exist?(File.join(@tmpdir, "site.yml"))
+  end
+
+  def test_post_file_written
+    assert_equal true, File.exist?(File.join(@tmpdir, "posts", "hello_world.html"))
+
+    html = "<!doctype html>\n<html>\n<head>\n  <title>Hello World</title>\n</head>\n<body>\n<article>\n  <h1>Foo</h1>\n\n<p>This is a foo. Hello people.</p>\n\n</article>\n</body>\n</html>"
+
+    assert_equal html, File.open(File.join(@tmpdir, "posts", "hello_world.html")).read
   end
 
 

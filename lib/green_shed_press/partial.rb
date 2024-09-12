@@ -16,5 +16,9 @@ module GSP
     def generate(output_directory:)
     end
 
+    def renderable?
+      false
+    end
+
   end
 end

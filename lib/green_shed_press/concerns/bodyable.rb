@@ -2,8 +2,16 @@ module GSP
   module Bodyable
     extend ActiveSupport::Concern
 
+    def body=(new_body)
+      @body = new_body
+    end
+
     def body
       @body ||= load_body
+    end
+
+    def renderable?
+      markdown? || erb?
     end
 
     def markdown?

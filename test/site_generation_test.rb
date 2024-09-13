@@ -35,5 +35,14 @@ class SiteGenerationTest < TLDR
     assert_equal html, File.open(File.join(@tmpdir, "posts", "hello_world.html")).read
   end
 
+  def test_slugged_page_file_written
+    assert_equal true, File.exist?(File.join(@tmpdir, "i", "am", "slugged.html"))
+  end
+
+  def test_slugged_page_as_index_file_written
+    assert_equal true, File.exist?(File.join(@tmpdir, "i", "am", "at", "index.html"))
+  end
+
+
 
 end

@@ -6,11 +6,17 @@ module GSP
       file.relative_path.start_with?("/photos")
     end
 
+    # @param file [GSPFile]
+    def self.collection_objects(file:)
+      photo = Photo.new(file: file)
+      photo_page = PhotoPage.new(file: file, photo: photo)
+
+      [photo, photo_page]
+    end
+
     def generate(output_directory:)
       copy_image_file(output_directory: output_directory)
-
-      make_image_landing_page(output_directory: output_directory)
-
+      # make_image_landing_page(output_directory: output_directory)
     end
 
     def copy_image_file(output_directory:)
@@ -19,17 +25,14 @@ module GSP
     end
 
     def make_image_landing_page(output_directory:)
+      #renderer = GSP::Renderer.new(site: self.site)
+      body = "" # renderer.render(object, context: OpenStruct.new(page: object))
+
+
       landing_page_filepath = self.output_filepath + ".html"
 
       File.open(File.join(output_directory, landing_page_filepath), "w") do |f|
-        f.write <<-HTML
-<!DOCTYPE html>
-<html><body>
-<img src="#{self.url}" alt="#{self.alt}" />
-<p>#{self.caption}</p>
-<p>exif to come</p>
-</body></html>
-        HTML
+        f.write self.body
       end
     end
 

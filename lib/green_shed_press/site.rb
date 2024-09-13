@@ -46,17 +46,18 @@ module GSP
       @files.each do |file|
         file_type_found = false
         GSP.collection_object_types.each do |type|
-          if type.has_collection_object?(file: file)
-            collection_object = type.collection_object(file: file)
-            @collection_objects[type.name] << collection_object
+          next unless type.has_collection_object?(file: file)
+          type.collection_objects(file: file).each do |object|
+            @collection_objects[object.class.name] << object
             file_type_found = true
-            break
           end
+
+          break if file_type_found
         end
 
         # Static files are a special case
         unless file_type_found
-          @collection_objects["GSP::StaticFile"] << GSP::StaticFile.collection_object(file: file)
+          @collection_objects["GSP::StaticFile"].concat GSP::StaticFile.collection_objects(file: file)
         end
       end
 
@@ -67,11 +68,15 @@ module GSP
       renderer = GSP::Renderer.new(site: self)
       @collection_objects.each do |type, objects|
         objects.each do |object|
-          next unless object.class.include?(Bodyable)
-          next unless object.renderable?
+          next unless object.try(:renderable?)
           object.body = renderer.render(object, context: OpenStruct.new(page: object))
         end
       end
+
+    rescue StandardError => e
+      puts "Error rendering site: #{e.class}: #{e.message.truncate(500)}"
+      puts e.backtrace.join("\n")
+      false
     end
 
     def generate(output_directory:)

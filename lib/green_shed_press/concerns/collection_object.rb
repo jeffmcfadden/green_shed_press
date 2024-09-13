@@ -23,8 +23,8 @@ module GSP
       end
 
       # The collection object to be generated from the given file
-      def collection_object(file:)
-        new(file: file)
+      def collection_objects(file:)
+        Array(new(file: file))
       end
     end
 

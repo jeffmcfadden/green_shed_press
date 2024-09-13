@@ -17,4 +17,8 @@ class PhotosTest < TLDR
     assert_equal true, File.exist?(File.join(@tmpdir, "photos", "DSC01626.jpg"))
   end
 
+  def test_photo_page_file_written
+    assert_equal true, File.exist?(File.join(@tmpdir, "photos", "DSC01626.jpg.html"))
+  end
+
 end

@@ -6,7 +6,14 @@ module GSP
     include Layoutable
 
     def self.has_collection_object?(file:)
-      file.relative_path.start_with?("/pages")
+      return false if file.relative_path.start_with?("/posts")
+      return false if file.relative_path.start_with?("/_layouts")
+      return false if file.relative_path.start_with?("/_partials")
+      return false if file.relative_path.start_with?("/photos")
+
+      return true if file.relative_path.start_with?("/pages")
+      return true if file.relative_path.end_with?(".erb")
+      return true if file.relative_path.end_with?(".md")
     end
 
     def generate(output_directory:)

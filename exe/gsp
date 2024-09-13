@@ -37,16 +37,16 @@ site_load_start_time = Time.now
 site.load
 site_load_time = Time.now - site_load_start_time
 
-process_start_time = Time.now
-site.process
-process_time = Time.now - process_start_time
+render_start_time = Time.now
+site.render
+render_time = Time.now - render_start_time
 
 generate_start_time = Time.now
 site.generate(output_directory: output_directory)
 generate_time = Time.now - generate_start_time
 
 puts "Load time: #{site_load_time.to_f.round(3)}s"
-puts "Process time: #{process_time.to_f.round(3)}s"
+puts "Render time: #{render_time.to_f.round(3)}s"
 puts "Generate time: #{generate_time.to_f.round(3)}s"
 
 if options[:server]

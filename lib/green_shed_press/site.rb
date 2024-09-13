@@ -44,16 +44,20 @@ module GSP
       end
 
       @files.each do |file|
+        file_type_found = false
         GSP.collection_object_types.each do |type|
           if type.has_collection_object?(file: file)
             collection_object = type.collection_object(file: file)
             @collection_objects[type.name] << collection_object
+            file_type_found = true
             break
           end
         end
 
         # Static files are a special case
-        @collection_objects["GSP::StaticFile"] << GSP::StaticFile.collection_object(file: file)
+        unless file_type_found
+          @collection_objects["GSP::StaticFile"] << GSP::StaticFile.collection_object(file: file)
+        end
       end
 
       true

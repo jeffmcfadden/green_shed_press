@@ -8,7 +8,7 @@ module GSP
     end
 
     def partial(partial_name)
-      partial_template = site.partial(named: partial_name).file.content
+      partial_template = site.partial(named: partial_name).content
       ERB.new(partial_template).result(binding)
     end
 

@@ -4,11 +4,8 @@ class SiteGenerationTest < TLDR
     @data_directory = File.join("test", "data", "test_site_01")
     @site = GSP::Site.new(config: File.join(@data_directory, "site.yml"))
     @site.load
-    @site.render
-
     @tmpdir = Dir.mktmpdir
     @site.generate(output_directory: @tmpdir)
-
   end
 
   def teardown

@@ -1,6 +1,4 @@
 module GSP
-  class MicroPost
-    include Frontmatterable
-
+  class MicroPost < Document
   end
 end

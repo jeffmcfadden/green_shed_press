@@ -1,16 +1,12 @@
 module GSP
-  class Layout
-    include CollectionObject
-    include Frontmatterable
-    include Bodyable
-    include Layoutable
+  class Layout < Document
 
     def name
-      file.basename.split(".").first
+      File.basename(@filepath).split(".").first
     end
 
-    def self.has_collection_object?(file:)
-      file.relative_path.start_with?("/_layouts")
+    def markdown?
+      false
     end
 
     def generate(output_directory:)

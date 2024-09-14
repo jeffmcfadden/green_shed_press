@@ -14,7 +14,7 @@ module GSP
     def initialize(file:, photo:)
       @file = file
       @photo = photo
-      @body = "Hello"
+      @body = ""
     end
 
     def layout

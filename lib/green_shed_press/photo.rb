@@ -50,13 +50,13 @@ module GSP
     #   self.file.relative_path
     # end
     #
-    # def alt
-    #   ""
-    # end
-    #
-    # def caption
-    #   ""
-    # end
+    def alt
+      ""
+    end
+
+    def caption
+      ""
+    end
 
     def exif
       @exif ||= JSON.parse(`exiftool -json -d "%Y-%m-%d %H:%M:%S" #{self.filepath}`).first

@@ -1,0 +1,9 @@
+---
+layout: "main"
+---
+
+This is a photoset.
+
+<% photos.each do |photo| %>
+  <%= partial "photo", locals: { photo: photo } %>
+<% end %>

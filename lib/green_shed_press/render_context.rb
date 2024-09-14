@@ -7,8 +7,15 @@ module GSP
       @base_dir = base_dir
     end
 
-    def partial(partial_name)
-      partial_template = site.partial(named: partial_name).content
+    def partial(partial_name, locals: {})
+      locals.each do |key, value|
+        @local_assigns[key] = value
+      end
+
+      partial = site.partial(named: partial_name)
+      raise "Partial not found: #{partial_name}. Known partials: #{site.partials.map(&:name).join(", ")}" unless partial
+
+      partial_template = partial.content
       ERB.new(partial_template).result(binding)
     end
 

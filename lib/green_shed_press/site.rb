@@ -32,6 +32,8 @@ module GSP
       @micro_posts = []
       @pages = []
 
+      @photo_sets = []
+
       @static_files = []
     end
 
@@ -112,6 +114,7 @@ module GSP
       @output_directory = File.expand_path(output_directory)
       generate_pages
       generate_posts
+      generate_photo_sets
 
       copy_static_files
     end
@@ -124,8 +127,12 @@ module GSP
       @posts.each{ generate_document(_1) }
     end
 
-    def generate_document(document)
-      content = render(template: document)
+    def generate_photo_sets
+      @photo_sets.each{ generate_photo_set(_1) }
+    end
+
+    def generate_document(document, context: nil)
+      content = render(template: document, context: context)
 
       FileUtils.mkdir_p(File.join(@output_directory, File.dirname(document.output_filepath)))
       File.open(File.join(@output_directory, document.output_filepath), "w") do |f|
@@ -133,7 +140,20 @@ module GSP
       end
     end
 
-    def render(template:, context: OpenStruct.new)
+    def generate_photo_set(photo_set)
+      # Generate the index page
+      generate_document(photo_set, context: OpenStruct.new(photos: photo_set.photos))
+
+      # Copy the photos over
+      photo_set.photos.each do |photo|
+        output_path = photo.filepath.sub(self.data_directory, "")
+        FileUtils.mkdir_p(File.join(@output_directory, File.dirname(output_path)))
+        FileUtils.cp(photo.filepath, File.join(@output_directory, output_path))
+      end
+    end
+
+    def render(template:, context: nil)
+      context ||= OpenStruct.new
       template.body = GSP.markdown.render(template.body) if template.markdown?
 
       context.site = self unless context.site
@@ -181,6 +201,10 @@ module GSP
     # @return [GSP::Page, nil]
     def page(titled:)
       @pages.find { _1.title == titled }
+    end
+
+    def photo_set(titled:)
+      @photo_sets.find { _1.title == titled }
     end
 
     private

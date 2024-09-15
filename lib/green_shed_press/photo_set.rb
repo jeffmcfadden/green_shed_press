@@ -8,6 +8,11 @@ module GSP
       load_photos
     end
 
+    def output_filepath
+      File.join("photos", self.title.downcase.gsub(" ", "_"), "index.html")
+    end
+
+
     private
 
     def load_photos

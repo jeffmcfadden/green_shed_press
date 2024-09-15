@@ -7,16 +7,6 @@ module GSP
       end
     end
 
-    # def title
-    #   return @title if defined?(@title)
-    #
-    #   if self.frontmatter.title
-    #     @title = self.frontmatter.title
-    #   else
-    #     @title = self.file.basename.split(".").first.titleize
-    #   end
-    # end
-    #
     def output_filepath
       slug = self.frontmatter.slug
       if slug

@@ -15,7 +15,7 @@ class RendererTest < TLDR
   end
 
   def test_rendering_page_with_markdown
-    page     = @site.page(titled: "Untitled")
+    page     = @site.page(titled: "About")
     output   = @site.render(template: page, context: OpenStruct.new(page: page ))
 
     expected_body = "<p>About <strong>me</strong></p>\n\n<p>I was born in a <em>small</em> town in the middle of nowhere.</p>"

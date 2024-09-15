@@ -23,7 +23,13 @@ module GSP
     end
 
     def title
-      @frontmatter.title || "Untitled"
+      return @title if defined?(@title)
+
+      if self.frontmatter.title
+        @title = self.frontmatter.title
+      else
+        @title = File.basename(self.filepath).split(".").first.titleize
+      end
     end
 
     def method_missing(symbol, *args)

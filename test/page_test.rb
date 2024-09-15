@@ -34,7 +34,7 @@ class PageTest < TLDR
 
   def test_untitled_page
     page = @site.page(titled: "About")
-    assert_nil page
+    assert_instance_of GSP::Page, page
   end
 
   def test_layout_loaded

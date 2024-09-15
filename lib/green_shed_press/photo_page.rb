@@ -1,20 +1,19 @@
 module GSP
   class PhotoPage
     include CollectionObject
-    include Frontmatterable
     include Bodyable
     include Layoutable
 
-    attr_accessor :photo
+    attr_accessor :photo, :photo_set
 
-    def self.has_collection_object?(file:)
-      false # Always returned from a Photo itself.
+    def initialize(photo:, photo_set:)
+      @photo = photo
+      @photo_set = photo_set
+      @body = ""
     end
 
-    def initialize(file:, photo:)
-      @file = file
-      @photo = photo
-      @body = ""
+    def filepath
+      "PhotoPage#{self.object_id}"
     end
 
     def layout
@@ -29,19 +28,12 @@ module GSP
       true
     end
 
-    def generate(output_directory:)
-      FileUtils.mkdir_p(File.join(output_directory, File.dirname(self.output_filepath)))
-      File.open(File.join(output_directory, self.output_filepath), "w") do |file|
-        file.write(self.body)
-      end
-    end
-
     def title
       ""
     end
 
     def output_filepath
-      self.photo.output_filepath + ".html"
+      File.join( self.photo_set.output_dirname, self.photo.basename + ".html" )
     end
 
     def url

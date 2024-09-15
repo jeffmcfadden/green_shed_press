@@ -176,11 +176,50 @@ module GSP
 
       # Copy the photos over
       photo_set.photos.each do |photo|
-        LOGGER.debug "  Copying photo file #{photo.filepath}"
-        LOGGER.debug "  to #{photo_output_directory}"
-        output_path = File.join(photo_output_directory, File.basename(photo.filepath))
-        FileUtils.cp(photo.filepath, output_path)
+        generate_photo_sizes(photo, output_directory: photo_output_directory)
+        photo_page = PhotoPage.new(photo: photo, photo_set: photo_set)
+        generate_document(photo_page, context: OpenStruct.new(photo: photo))
       end
+
+      # TODO: Create a photo page for each photo in the set
+
+    end
+
+    def generate_photo_sizes(photo, output_directory:)
+      LOGGER.debug "Site#generate_photo: #{photo.filepath}"
+
+      exif_fields_to_keep = ["icc-profile-data", "DateTimeOriginal", "Make", "Model", "LensModel", "FocalLength", "FNumber", "ExposureTime", "ISO", "Flash", "ExposureBiasValue", "ExposureProgram", "MeteringMode", "WhiteBalance", "ExposureMode", "ExposureCompensation", "Software", "Artist", "Copyright"]
+
+      [2048, 1024, 800, 600, 400, 200].each do |size|
+        LOGGER.debug "  Rendering photo #{photo.filepath} at size #{size}"
+        output_filepath = File.join(output_directory, "#{photo.filename_for_size(size)}")
+
+        if File.exist?(output_filepath)
+          LOGGER.debug "  skipping photo #{photo.filepath} at size #{size} because it already exists"
+          next
+        end
+
+        image = Vips::Image.new_from_file photo.filepath
+
+        # Remove the EXIF fields we don't want present in the thumbnails, like location data, and the
+        # extensive settings that Lightroom, etc add to the EXIF et. al.
+        image = image.mutate do |mutable_image|
+          mutable_image.get_fields.each do |field|
+            mutable_image.remove!(field) unless exif_fields_to_keep.include?(field)
+          end
+
+        end
+
+        scale = size.to_f / [image.width, image.height].max
+        scale = 1 if scale > 1
+
+        thumb = image.resize scale
+        thumb.write_to_file "#{output_filepath}", Q: 85
+      end
+
+      # TODO: Strip the exif from the original, then copy it over to the output directory.
+      # Maybe as _full.jpg?
+
     end
 
     def render(template:, context: nil)

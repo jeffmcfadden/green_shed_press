@@ -4,12 +4,15 @@ module GSP
 
     def initialize(filepath)
       super
-
       load_photos
     end
 
+    def output_dirname
+      File.join("photos", self.title.downcase.gsub(" ", "_"))
+    end
+
     def output_filepath
-      File.join("photos", self.title.downcase.gsub(" ", "_"), "index.html")
+      File.join(output_dirname, "index.html")
     end
 
 

@@ -28,4 +28,8 @@ class PhotoSetsTest < TLDR
     assert_equal true, File.exist?(File.join(@tmpdir, "photo_sets", "a_walk_in_the_park", "DSC01626.jpg"))
   end
 
+  def photo_page_files_created
+    assert_equal true, File.exist?(File.join(@tmpdir, "photo_sets", "a_walk_in_the_park", "DSC01626.html"))
+  end
+
 end

@@ -2,4 +2,4 @@
 layout: "main"
 ---
 
-<img src="<%= page.photo.url %>" alt="<%= page.photo.alt %>" />
+<img src="<%= page.photo.filename_for_size(200) %>" alt="<%= page.photo.alt %>" />

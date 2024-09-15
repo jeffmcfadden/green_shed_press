@@ -13,7 +13,7 @@ module GSP
     end
 
     def filepath
-      "PhotoPage#{self.object_id}"
+      output_filepath
     end
 
     def layout

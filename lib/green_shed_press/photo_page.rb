@@ -1,10 +1,13 @@
 module GSP
   class PhotoPage
-    include CollectionObject
     include Bodyable
     include Layoutable
 
     attr_accessor :photo, :photo_set
+
+    def markdown? ; false ; end
+    def erb? ; true ; end
+    def layout ; "photo" ; end
 
     def initialize(photo:, photo_set:)
       @photo = photo
@@ -14,18 +17,6 @@ module GSP
 
     def filepath
       output_filepath
-    end
-
-    def layout
-      "photo"
-    end
-
-    def markdown?
-      false
-    end
-
-    def erb?
-      true
     end
 
     def title

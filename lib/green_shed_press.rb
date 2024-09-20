@@ -29,7 +29,6 @@ end
 
 require_relative "green_shed_press/concerns/bodyable"
 require_relative "green_shed_press/concerns/frontmatterable"
-require_relative "green_shed_press/concerns/collection_object"
 require_relative "green_shed_press/concerns/content_loadable"
 require_relative "green_shed_press/concerns/layoutable"
 require_relative "green_shed_press/site"

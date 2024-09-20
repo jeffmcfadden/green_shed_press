@@ -37,11 +37,19 @@ module GSP
       @static_files = []
     end
 
+    def root
+      @data_directory
+    end
+
+    def relative_path(path)
+      path.gsub(self.data_directory, "")
+    end
+
     def load_posts
       LOGGER.debug "Site#load_posts"
 
       Dir.glob(File.join(self.data_directory, "_posts", "**", "*.md")).each do |file|
-        p = Post.new(file)
+        p = Post.new(directory: root, filepath: relative_path(file))
         @posts << p unless p.draft?
       end
 
@@ -52,7 +60,7 @@ module GSP
       LOGGER.debug "Site#load_micro_posts"
 
       Dir.glob(File.join(self.data_directory, "_micro_posts", "**", "*.md")).each do |file|
-        @micro_posts << MicroPost.new(file)
+        @micro_posts << MicroPost.new(directory: root, filepath: relative_path(file))
       end
 
       @micro_posts
@@ -62,11 +70,11 @@ module GSP
       LOGGER.debug "Site#load_pages"
 
       Dir.glob(File.join(self.data_directory, "_pages", "**", "*.md")).each do |file|
-        @pages << Page.new(file)
+        @pages << Page.new(directory: root, filepath: relative_path(file))
       end
 
       Dir.glob(File.join(self.data_directory, "_pages", "**", "*.erb")).each do |file|
-        @pages << Page.new(file)
+        @pages << Page.new(directory: root, filepath: relative_path(file))
       end
 
       @pages
@@ -76,7 +84,7 @@ module GSP
       LOGGER.debug "Site#load_layouts"
 
       Dir.glob(File.join(self.data_directory, "_layouts", "**", "*.erb")).each do |file|
-        @layouts << Layout.new(file)
+        @layouts << Layout.new(directory: root, filepath: relative_path(file))
       end
 
       @layouts
@@ -86,7 +94,7 @@ module GSP
       LOGGER.debug "Site#load_partials"
 
       Dir.glob(File.join(self.data_directory, "_partials", "**", "*.erb")).each do |file|
-        @partials << Partial.new(file)
+        @partials << Partial.new(directory: root, filepath: relative_path(file))
       end
 
       @partials
@@ -96,7 +104,7 @@ module GSP
       LOGGER.debug "Site#load_photo_sets"
 
       Dir.glob(File.join(self.data_directory, "_photos", "**", "index.md")).each do |file|
-        @photo_sets << PhotoSet.new(file)
+        @photo_sets << PhotoSet.new(directory: root, filepath: relative_path(file))
       end
 
       @photo_sets
@@ -106,16 +114,14 @@ module GSP
       LOGGER.debug "Site#load_static_files"
 
       Dir.glob(File.join(self.data_directory, '**', '*')).each do |file|
-        relative_path = file.sub(self.data_directory, "")
-
         next if File.directory?(file)
         next if File.basename(file).start_with?(".")
-        next if relative_path.start_with?("_")
-        next if relative_path.start_with?("/_")
+        next if relative_path(file).start_with?("_")
+        next if relative_path(file).start_with?("/_")
         next if FILES_TO_SKIP.include?(File.basename(file))
 
         LOGGER.debug "  #{file}"
-        @static_files << GSP::StaticFile.new(file)
+        @static_files << GSP::StaticFile.new(directory: root, filepath: relative_path(file))
       end
 
       @static_files
@@ -204,7 +210,7 @@ module GSP
           next
         end
 
-        image = Vips::Image.new_from_file photo.filepath
+        image = Vips::Image.new_from_file File.join(root, photo.filepath)
 
         # Remove the EXIF fields we don't want present in the thumbnails, like location data, and the
         # extensive settings that Lightroom, etc add to the EXIF et. al.
@@ -263,7 +269,7 @@ module GSP
         LOGGER.debug "  #{file.filepath}"
         output_path = file.filepath.sub(self.data_directory, "")
         FileUtils.mkdir_p(File.join(@output_directory, File.dirname(output_path)))
-        FileUtils.cp(file.filepath, File.join(@output_directory, output_path))
+        FileUtils.cp(File.join(self.data_directory, file.filepath), File.join(@output_directory, output_path))
       end
     end
 

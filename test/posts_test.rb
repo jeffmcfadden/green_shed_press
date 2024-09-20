@@ -1,7 +1,7 @@
 class PostsTest < TLDR
 
   def setup
-    @draft_post = GSP::Post.new(File.join("test", "data", "test_site_01", "_posts", "draft_post.md"))
+    @draft_post = GSP::Post.new(directory: File.join("test", "data", "test_site_01"), filepath: File.join("_posts", "draft_post.md"))
   end
 
   def test_draft_status

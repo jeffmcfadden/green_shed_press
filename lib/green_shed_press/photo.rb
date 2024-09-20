@@ -2,7 +2,8 @@ module GSP
   class Photo
     attr_reader :filepath
 
-    def initialize(filepath)
+    def initialize(directory:, filepath:)
+      @directory = directory
       @filepath = filepath
     end
 
@@ -23,7 +24,7 @@ module GSP
     end
 
     def exif
-      @exif ||= JSON.parse(`exiftool -json -d "%Y-%m-%d %H:%M:%S" #{self.filepath}`).first
+      @exif ||= JSON.parse(`exiftool -json -d "%Y-%m-%d %H:%M:%S" #{@directory}#{@filepath}`).first
     end
 
   end

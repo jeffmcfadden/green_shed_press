@@ -2,7 +2,7 @@ module GSP
   class PhotoSet < Document
     attr_reader :photos
 
-    def initialize(filepath)
+    def initialize(directory:, filepath:)
       super
       load_photos
     end
@@ -20,8 +20,11 @@ module GSP
 
     def load_photos
       @photos = []
-      Dir.glob("#{self.dirname}/*.jpg").each do |photo_path|
-        @photos << Photo.new(photo_path)
+
+      dir = File.join(@directory, dirname)
+
+      Dir.glob("#{dir}/*.jpg").each do |photo_path|
+        @photos << Photo.new(directory: @directory, filepath: photo_path.gsub(@directory, ""))
       end
     end
 

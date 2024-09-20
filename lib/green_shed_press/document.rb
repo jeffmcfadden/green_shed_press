@@ -3,15 +3,20 @@ module GSP
     attr_reader :filepath
     attr_accessor :content, :body, :frontmatter
 
-    def initialize(filepath)
+    def initialize(directory:, filepath:)
+      @directory = directory
       @filepath = filepath
-      @content = File.open(@filepath).read
+      @content = File.open(File.join(@directory, @filepath)).read
       @body = ContentBodyExtractor.new(content: @content).body
       @frontmatter = FrontmatterExtractor.new(content: @content).frontmatter
     end
 
     def markdown?
-      File.basename(@filepath).split(".").any?{ |ext| ext == "md" }
+      basename.split(".").any?{ |ext| ext == "md" }
+    end
+
+    def basename
+      File.basename(@filepath)
     end
 
     def output_filepath

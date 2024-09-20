@@ -24,7 +24,7 @@ module GSP
       dir = File.join(@directory, dirname)
 
       Dir.glob("#{dir}/*.jpg").each do |photo_path|
-        @photos << Photo.new(directory: @directory, filepath: photo_path.gsub(@directory, ""))
+        @photos << Photo.new(directory: @directory, filepath: photo_path.gsub(@directory, ""), photo_set: self)
       end
     end
 

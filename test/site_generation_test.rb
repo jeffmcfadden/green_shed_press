@@ -40,6 +40,10 @@ class SiteGenerationTest < TLDR
     assert_equal true, File.exist?(File.join(@tmpdir, "i", "am", "at", "index.html"))
   end
 
+  def test_draft_posts_arent_published
+    assert_equal false, File.exist?(File.join(@tmpdir, "posts", "draft.html"))
+  end
+
 
 
 end

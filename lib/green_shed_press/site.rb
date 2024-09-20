@@ -41,7 +41,8 @@ module GSP
       LOGGER.debug "Site#load_posts"
 
       Dir.glob(File.join(self.data_directory, "_posts", "**", "*.md")).each do |file|
-        @posts << Post.new(file)
+        p = Post.new(file)
+        @posts << p unless p.draft?
       end
 
       @posts

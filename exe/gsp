@@ -21,6 +21,10 @@ options_parser = OptionParser.new do |opts|
     options[:server] = true
   end
 
+  opts.on("-w", "--watch", "Watch for changes and rebuild the site") do
+    options[:watch] = true
+  end
+
   opts.on("--verbose", "Verbose logging") do
     options[:verbose] = true
   end
@@ -49,10 +53,39 @@ generate_time = Time.now - generate_start_time
 puts "Load time: #{site_load_time.to_f.round(3)}s"
 puts "Generate time: #{generate_time.to_f.round(3)}s"
 
+threads = []
+
+@watcher_pid = nil
+@web_server = nil
+
+if options[:watch]
+  puts "Watching for changes..."
+
+  threads << Thread.new do
+    command = "fswatch -or './data/' | xargs -n1 -I{} bundle exec gsp"
+    # Fork and run command
+    @watcher_pid = fork { exec command }
+    Process.wait(@watcher_pid)
+  end
+
+end
+
 if options[:server]
   puts "Starting server at http://localhost:9090"
-  root = File.expand_path output_directory
-  server = WEBrick::HTTPServer.new :Port => 9090, :DocumentRoot => root
-  trap 'INT' do server.shutdown end
-  server.start
+
+  threads << Thread.new do
+    root = File.expand_path output_directory
+    @web_server = WEBrick::HTTPServer.new :Port => 9090, :DocumentRoot => root
+    @web_server.start
+  end
 end
+
+trap 'INT' do
+  puts "Exiting..."
+  puts "  Killing watcher..."
+  Process.kill("INT", @watcher_pid) if @watcher_pid
+  puts "  Shutting down server..."
+  @web_server&.shutdown
+end
+
+threads.each(&:join)

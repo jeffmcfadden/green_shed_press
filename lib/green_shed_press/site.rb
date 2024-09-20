@@ -65,6 +65,10 @@ module GSP
         @pages << Page.new(file)
       end
 
+      Dir.glob(File.join(self.data_directory, "_pages", "**", "*.erb")).each do |file|
+        @pages << Page.new(file)
+      end
+
       @pages
     end
 
@@ -221,6 +225,10 @@ module GSP
       # TODO: Strip the exif from the original, then copy it over to the output directory.
       # Maybe as _full.jpg?
 
+    end
+
+    def photos
+      @photo_sets.flat_map(&:photos)
     end
 
     def render(template:, context: nil)

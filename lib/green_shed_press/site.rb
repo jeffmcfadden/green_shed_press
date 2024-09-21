@@ -201,7 +201,7 @@ module GSP
 
       exif_fields_to_keep = ["icc-profile-data", "DateTimeOriginal", "Make", "Model", "LensModel", "FocalLength", "FNumber", "ExposureTime", "ISO", "Flash", "ExposureBiasValue", "ExposureProgram", "MeteringMode", "WhiteBalance", "ExposureMode", "ExposureCompensation", "Software", "Artist", "Copyright"]
 
-      [2048, 1024, 800, 600, 400, 200].each do |size|
+      Photo.size_map.each do |size, max_dimension|
         LOGGER.debug "  Rendering photo #{photo.filepath} at size #{size}"
         output_filepath = File.join(output_directory, "#{photo.filename_for_size(size)}")
 
@@ -221,17 +221,14 @@ module GSP
 
         end
 
-        scale = size.to_f / [image.width, image.height].max
+        scale = max_dimension.to_f / [image.width, image.height].max
         scale = 1 if scale > 1
 
         thumb = image.resize scale
         thumb.write_to_file "#{output_filepath}", Q: 85
       end
-
-      # TODO: Strip the exif from the original, then copy it over to the output directory.
-      # Maybe as _full.jpg?
-
     end
+
 
     def photos
       @photo_sets.flat_map(&:photos)

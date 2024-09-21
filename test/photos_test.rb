@@ -12,12 +12,8 @@ class PhotosTest < TLDR
     FileUtils.remove_entry(@tmpdir)
   end
 
-  def test_photo_file_written
-    # assert_equal true, File.exist?(File.join(@tmpdir, "photos", "DSC01626.jpg"))
-  end
-
-  def test_photo_page_file_written
-    # assert_equal true, File.exist?(File.join(@tmpdir, "photos", "DSC01626.jpg.html"))
+  def test_full_size_photo_created
+    assert_equal true, File.exist?(File.join(@tmpdir, "photos", "a_walk_in_the_park", "DSC01626_full.jpg"))
   end
 
 end

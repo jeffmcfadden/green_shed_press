@@ -2,6 +2,16 @@ module GSP
   class Photo
     attr_reader :filepath
 
+    def self.size_map
+      { "full" => 9999999,
+        "2048" => 2048,
+        "1024" => 1024,
+        "800" => 800,
+        "600" => 600,
+        "400" => 400,
+        "200" => 200 }
+    end
+
     def initialize(directory:, filepath:, photo_set:)
       @directory = directory
       @filepath = filepath

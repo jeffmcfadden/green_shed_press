@@ -27,7 +27,7 @@ class SiteGenerationTest < TLDR
   def test_post_file_written
     assert_equal true, File.exist?(File.join(@tmpdir, "posts", "hello_world.html"))
 
-    html = "<!doctype html>\n<html>\n<head>\n  <title>Hello World</title>\n</head>\n<body>\n<article>\n  <h1>Foo</h1>\n\n<p>This is a foo. Hello people.</p>\n\n</article>\n</body>\n</html>"
+    html = "<!doctype html>\n<html>\n<head>\n  <title>Hello World</title>\n</head>\n<body>\n<article>\n  \n<h1 id=\"foo\">Foo</h1>\n\n<p>This is a foo. Hello people.</p>\n\n</article>\n</body>\n</html>"
 
     assert_equal html, File.open(File.join(@tmpdir, "posts", "hello_world.html")).read
   end
@@ -42,6 +42,15 @@ class SiteGenerationTest < TLDR
 
   def test_draft_posts_arent_published
     assert_equal false, File.exist?(File.join(@tmpdir, "posts", "draft.html"))
+  end
+
+  def test_syntax_highlighting
+    html = File.open(File.join(@tmpdir, "posts", "i_have_code.html")).read
+    assert_equal true, html.include?('<code><span class="k">def</span> <span class="nf">hello</span>')
+  end
+
+  def test_paginated_posts
+    assert_equal true, File.exist?(File.join(@tmpdir, "posts", "page_2.html"))
   end
 
 

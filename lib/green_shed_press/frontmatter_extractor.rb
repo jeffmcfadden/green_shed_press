@@ -17,7 +17,7 @@ module GSP
       frontmatter_data = if frontmatter_yaml.nil?
         {}
       else
-        YAML.load(frontmatter_yaml, symbolize_names: true)
+        YAML.unsafe_load(frontmatter_yaml, symbolize_names: true)
       end
 
       Frontmatter.new(frontmatter_data)

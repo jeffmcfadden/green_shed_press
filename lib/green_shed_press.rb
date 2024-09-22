@@ -1,9 +1,11 @@
 require 'erb'
 require 'fileutils'
 require 'json'
+require 'kramdown'
+require 'kramdown-parser-gfm'
 require 'logger'
 require 'ostruct'
-require 'redcarpet'
+require 'rouge'
 require 'time'
 require 'webrick'
 require 'vips'
@@ -21,8 +23,10 @@ module GSP
   LOGGER = Logger.new($stdout)
   LOGGER.level = Logger::DEBUG
 
-  def self.markdown
-    @markdown ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, tables: true)
+  def self.render_markdown(text)
+    Kramdown::Document.new(text, { auto_ids: true,
+                                   input: "GFM"  }
+    ).to_html
   end
 
 end

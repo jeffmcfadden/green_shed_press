@@ -1,0 +1,11 @@
+---
+title: "Posts"
+paginate_collection: posts_newest_first
+per_page: 1
+layout: "main"
+base_slug: "/posts/"
+---
+
+<% items.each do |post| %>
+    <%= post.title %>
+<% end %>

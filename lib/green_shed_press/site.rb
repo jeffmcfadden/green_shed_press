@@ -37,6 +37,10 @@ module GSP
       @static_files = []
     end
 
+    def posts_newest_first
+      @posts.sort_by(&:created_at).reverse
+    end
+
     def root
       @data_directory
     end
@@ -49,6 +53,7 @@ module GSP
       LOGGER.debug "Site#load_posts"
 
       Dir.glob(File.join(self.data_directory, "_posts", "**", "*.md")).each do |file|
+        LOGGER.debug "  #{file}"
         p = Post.new(directory: root, filepath: relative_path(file))
         @posts << p unless p.draft?
       end
@@ -151,13 +156,23 @@ module GSP
     def generate_pages
       LOGGER.debug "Site#generate_pages"
 
-      @pages.each{ generate_document(_1) }
+      @pages.each do
+        LOGGER.debug "  #{_1.filepath}"
+        if _1.paginated?
+          generate_paginated_document(_1)
+        else
+          generate_document(_1)
+        end
+      end
     end
 
     def generate_posts
       LOGGER.debug "Site#generate_posts"
 
-      @posts.each{ generate_document(_1) }
+      @posts.each do
+        LOGGER.debug "  #{_1.filepath}"
+        generate_document(_1)
+      end
     end
 
     def generate_photo_sets
@@ -174,6 +189,30 @@ module GSP
       FileUtils.mkdir_p(File.join(@output_directory, File.dirname(document.output_filepath)))
       File.open(File.join(@output_directory, document.output_filepath), "w") do |f|
         f.write content
+      end
+    end
+
+    def generate_paginated_document(document)
+      LOGGER.debug "Site#generate_paginated_document: #{document.filepath}"
+
+      items_to_paginate = self.public_send(document.paginate_collection)
+      items_to_paginate.each_slice(document.per_page).with_index do |items, index|
+        LOGGER.debug "  page #{index + 1}"
+        context = OpenStruct.new(
+          items: items,
+          page_number: index + 1,
+          total_pages: (items_to_paginate.length.to_f / document.per_page).ceil,
+          total_items: items_to_paginate.length
+        )
+
+        this_document = document.dup
+        if index == 0
+          this_document.slug = document.base_slug
+        else
+          this_document.slug = document.base_slug + "/page_#{index + 1}.html"
+        end
+
+        generate_document(this_document, context: context)
       end
     end
 
@@ -236,7 +275,7 @@ module GSP
 
     def render(template:, context: nil)
       context ||= OpenStruct.new
-      template.body = GSP.markdown.render(template.body) if template.markdown?
+      template.body = GSP.render_markdown(template.body) if template.markdown?
 
       context.site = self unless context.site
       context.page = template unless context.page

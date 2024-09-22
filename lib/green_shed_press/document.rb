@@ -1,7 +1,7 @@
 module GSP
   class Document
     attr_reader :filepath
-    attr_accessor :content, :body, :frontmatter
+    attr_accessor :content, :body, :frontmatter, :slug
 
     def initialize(directory:, filepath:)
       @directory = directory
@@ -9,6 +9,10 @@ module GSP
       @content = File.open(File.join(@directory, @filepath)).read
       @body = ContentBodyExtractor.new(content: @content).body
       @frontmatter = FrontmatterExtractor.new(content: @content).frontmatter
+    end
+
+    def paginated?
+      self.frontmatter.paginate_collection
     end
 
     def markdown?
@@ -35,6 +39,14 @@ module GSP
       else
         @title = File.basename(self.filepath).split(".").first.titleize
       end
+    end
+
+    def slug
+      @slug ||= self.frontmatter.slug || self.title.downcase.gsub(" ", "-")
+    end
+
+    def tags
+      @frontmatter.tags&.split(",")&.map(&:strip) || []
     end
 
     def method_missing(symbol, *args)

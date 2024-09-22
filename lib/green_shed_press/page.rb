@@ -2,7 +2,7 @@ module GSP
   class Page < Document
 
     def output_filepath
-      slug = self.frontmatter.slug
+      slug = self.slug
       if slug
         slug += "index.html" if slug.end_with?("/")
       else

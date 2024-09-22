@@ -15,6 +15,10 @@ module GSP
       File.join(output_dirname, "index.html")
     end
 
+    def url
+      "/#{self.output_dirname}/"
+    end
+
 
     private
 

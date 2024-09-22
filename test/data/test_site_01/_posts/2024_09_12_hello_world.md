@@ -1,6 +1,7 @@
 ---
 title: "Hello World"
 layout: "post"
+date: "2024-09-12"
 ---
 
 # Foo

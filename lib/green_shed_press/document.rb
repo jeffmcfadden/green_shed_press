@@ -34,7 +34,7 @@ module GSP
     def title
       return @title if defined?(@title)
 
-      if self.frontmatter.title && !self.frontmatter.title.empty?
+      if self.frontmatter.title && !self.frontmatter.title.strip.empty?
         @title = self.frontmatter.title
       else
         @title = File.basename(self.filepath).split(".").first.titleize

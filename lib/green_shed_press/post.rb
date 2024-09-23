@@ -11,6 +11,10 @@ module GSP
       end
     end
 
+    def layout
+      super || "post"
+    end
+
     def date_from_filename
       filename.match(/\d{4}-\d{2}-\d{2}/).to_s
     end

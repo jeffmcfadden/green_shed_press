@@ -11,14 +11,14 @@ class RendererTest < TLDR
     page   = @site.page(titled: "Home")
     output = @site.render(template: page, context: OpenStruct.new(page: page ))
 
-    assert_equal "<p>Hello World!</p>\n", output
+    assert_equal "<!doctype html>\n<html>\n<head>\n  <title>Home</title>\n</head>\n<body>\n\n<p>Hello World!</p>\n\n</body>\n</html>", output
   end
 
   def test_rendering_page_with_markdown
     page     = @site.page(titled: "About")
     output   = @site.render(template: page, context: OpenStruct.new(page: page ))
 
-    expected_body = "<p>About <strong>me</strong></p>\n\n<p>I was born in a <em>small</em> town in the middle of nowhere.</p>"
+    expected_body = "<!doctype html>\n<html>\n<head>\n  <title>About</title>\n</head>\n<body>\n\n<p>About <strong>me</strong></p>\n\n<p>I was born in a <em>small</em> town in the middle of nowhere.</p>\n\n</body>\n</html>"
 
     assert_equal expected_body, output.strip
   end

@@ -1,6 +1,10 @@
 module GSP
   class Page < Document
 
+    def layout
+      super || "page"
+    end
+
     def output_filepath
       slug = self.slug
       if slug

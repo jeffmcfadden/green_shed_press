@@ -7,6 +7,10 @@ module GSP
       load_photos
     end
 
+    def layout
+      super || "photo_set"
+    end
+
     def output_dirname
       File.join("photos", self.title.downcase.gsub(" ", "_"))
     end

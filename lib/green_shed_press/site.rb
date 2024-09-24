@@ -150,10 +150,10 @@ module GSP
       LOGGER.debug "Site#generate"
 
       @output_directory = File.expand_path(output_directory)
-      generate_pages
       generate_posts
       generate_micro_posts
       generate_photo_sets
+      generate_pages
 
       copy_static_files
     end

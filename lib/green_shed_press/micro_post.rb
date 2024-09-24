@@ -3,5 +3,8 @@ module GSP
     def layout
       super || "micro_post"
     end
+
+    def title; ""; end
+
   end
 end

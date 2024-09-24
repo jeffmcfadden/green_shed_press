@@ -148,6 +148,7 @@ module GSP
       @output_directory = File.expand_path(output_directory)
       generate_pages
       generate_posts
+      generate_micro_posts
       generate_photo_sets
 
       copy_static_files
@@ -170,6 +171,15 @@ module GSP
       LOGGER.debug "Site#generate_posts"
 
       @posts.each do
+        LOGGER.debug "  #{_1.filepath}"
+        generate_document(_1)
+      end
+    end
+
+    def generate_micro_posts
+      LOGGER.debug "Site#generate_micro_posts"
+
+      @micro_posts.each do
         LOGGER.debug "  #{_1.filepath}"
         generate_document(_1)
       end

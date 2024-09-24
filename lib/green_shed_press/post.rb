@@ -1,26 +1,8 @@
 module GSP
   class Post < Document
 
-    def created_at
-      date = frontmatter.date || frontmatter.created_at || date_from_filename
-
-      if date.is_a? String
-        Date.parse(date)
-      else
-        date
-      end
-    end
-
     def layout
       super || "post"
-    end
-
-    def date_from_filename
-      filename.match(/\d{4}-\d{2}-\d{2}/).to_s
-    end
-
-    def draft?
-      self.frontmatter.draft.in? [true, "true", 1, "1"]
     end
 
     def url

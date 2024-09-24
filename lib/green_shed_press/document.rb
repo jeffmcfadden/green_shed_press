@@ -19,8 +19,8 @@ module GSP
       basename.split(".").any?{ |ext| ext == "md" }
     end
 
-    def basename
-      File.basename(@filepath)
+    def basename(*args)
+      File.basename(@filepath, *args)
     end
 
     def output_filepath
@@ -29,6 +29,24 @@ module GSP
 
     def layout
       @frontmatter.layout
+    end
+
+    def draft?
+      @frontmatter.draft.in? [true, "true", 1, "1"]
+    end
+
+    def date_from_filename
+      basename.match(/\d{4}-\d{2}-\d{2}/).to_s
+    end
+
+    def created_at
+      date = frontmatter.date || frontmatter.created_at || date_from_filename
+
+      if date.is_a? String
+        Date.parse(date)
+      else
+        date
+      end
     end
 
     def title

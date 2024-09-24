@@ -41,6 +41,10 @@ module GSP
       @posts.sort_by(&:created_at).reverse
     end
 
+    def all_items_newest_first
+      (@posts + @micro_posts).sort_by(&:created_at).reverse
+    end
+
     def root
       @data_directory
     end

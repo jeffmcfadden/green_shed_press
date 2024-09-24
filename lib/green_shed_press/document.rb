@@ -34,11 +34,15 @@ module GSP
     def title
       return @title if defined?(@title)
 
-      if self.frontmatter.title && !self.frontmatter.title.strip.empty?
-        @title = self.frontmatter.title
+      if self.frontmatter.title
+        @title = self.frontmatter.title.strip
       else
-        @title = File.basename(self.filepath).split(".").first.titleize
+        @title = File.basename(self.filepath).split(".").first.strip.titleize
       end
+    end
+
+    def untitled?
+      self.title.strip.empty?
     end
 
     def slug

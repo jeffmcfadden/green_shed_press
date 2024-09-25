@@ -41,5 +41,11 @@ class RendererTest < TLDR
     assert_equal expected_body, output.strip
   end
 
+  def test_hard_wrapping_off
+    html = GSP.render_markdown("Hello world hello.\nThis is a new line.\nSo is this.")
+
+    assert_equal "<p>Hello world hello.\nThis is a new line.\nSo is this.</p>\n", html
+  end
+
 
 end

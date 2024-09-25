@@ -25,7 +25,8 @@ module GSP
 
   def self.render_markdown(text)
     Kramdown::Document.new(text, { auto_ids: true,
-                                   input: "GFM"  }
+                                   input: "GFM",
+                                   hard_wrap: false  }
     ).to_html
   end
 

@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.executables << "gsp"
 
   s.add_dependency "activesupport"
+  s.add_dependency "async", ">= 2.1"
   s.add_dependency "kramdown"
   s.add_dependency "kramdown-parser-gfm"
   s.add_dependency "rouge"

@@ -315,11 +315,21 @@ module GSP
     def copy_static_files
       LOGGER.debug "Site#copy_static_files"
 
-      @static_files.each do |file|
-        LOGGER.debug "  #{file.filepath}"
-        output_path = file.filepath.sub(self.data_directory, "")
-        FileUtils.mkdir_p(File.join(@output_directory, File.dirname(output_path)))
-        FileUtils.cp(File.join(self.data_directory, file.filepath), File.join(@output_directory, output_path))
+      barrier = Async::Barrier.new
+
+      Sync do
+        semaphore = Async::Semaphore.new(10, parent: barrier)
+
+        @static_files.map do |file|
+          semaphore.async do
+            LOGGER.debug "  #{file.filepath}"
+            output_path = file.filepath.sub(self.data_directory, "")
+            FileUtils.mkdir_p(File.join(@output_directory, File.dirname(output_path)))
+            FileUtils.cp(File.join(self.data_directory, file.filepath), File.join(@output_directory, output_path))
+          end
+        end.map(&:wait)
+      ensure
+        barrier.stop
       end
     end
 

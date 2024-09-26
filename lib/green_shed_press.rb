@@ -1,3 +1,6 @@
+require 'async'
+require 'async/barrier'
+require 'async/semaphore'
 require 'erb'
 require 'fileutils'
 require 'json'

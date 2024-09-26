@@ -14,6 +14,7 @@ class SiteGenerationTest < TLDR
 
   def test_static_files_written
     assert_equal true, File.exist?(File.join(@tmpdir, "static_test.txt"))
+    assert_equal true, File.exist?(File.join(@tmpdir, "assets", "main.css"))
   end
 
   def test_assets_written

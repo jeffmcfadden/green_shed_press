@@ -56,12 +56,23 @@ module GSP
     def load_posts
       LOGGER.debug "Site#load_posts"
 
-      Dir.glob(File.join(self.data_directory, "_posts", "**", "*.md")).each do |file|
-        LOGGER.debug "  #{file}"
-        p = Post.new(directory: root, filepath: relative_path(file))
-        @posts << p unless p.draft?
+      barrier = Async::Barrier.new
+
+      Sync do
+        semaphore = Async::Semaphore.new(10, parent: barrier)
+
+        @posts = Dir.glob(File.join(self.data_directory, "_posts", "**", "*.md")).map do |file|
+          semaphore.async do
+            LOGGER.debug "  #{file}"
+            p = Post.new(directory: root, filepath: relative_path(file))
+            p.draft? ? nil : p
+          end
+        end.map(&:wait)
+      ensure
+        barrier.stop
       end
 
+      @posts.compact!
       @posts
     end
 

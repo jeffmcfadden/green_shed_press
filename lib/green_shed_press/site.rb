@@ -3,7 +3,7 @@ require 'yaml'
 module GSP
   class Site
     attr_reader :title, :base_url, :description, :metadata, :files
-    attr_reader :layouts, :partials, :pages, :posts, :micro_posts, :photo_sets, :static_files
+    attr_reader :layouts, :partials, :pages, :posts, :books, :micro_posts, :photo_sets, :static_files
 
     attr_accessor :data_directory
 
@@ -31,6 +31,9 @@ module GSP
       @posts = []
       @micro_posts = []
       @pages = []
+
+      # @type [Array<GSP::Book>]
+      @books = []
 
       @photo_sets = []
 
@@ -74,6 +77,14 @@ module GSP
 
       @posts.compact!
       @posts
+    end
+
+    def load_books
+      LOGGER.debug "Site#load_micro_posts"
+
+      @books = Dir.glob(File.join(self.data_directory, "_books", "**", "*.md")).map do |file|
+        Book.new(directory: root, filepath: relative_path(file))
+      end
     end
 
     def load_micro_posts
@@ -152,6 +163,7 @@ module GSP
       load_partials
       load_pages
       load_posts
+      load_books
       load_micro_posts
       load_photo_sets
       load_static_files
@@ -161,8 +173,10 @@ module GSP
       LOGGER.debug "Site#generate"
 
       @output_directory = File.expand_path(output_directory)
+      build_book_micro_posts
       generate_posts
       generate_micro_posts
+      generate_books
       generate_photo_sets
       generate_pages
 
@@ -191,10 +205,31 @@ module GSP
       end
     end
 
+    # Builds a micro post for each book that has been started
+    def build_book_micro_posts
+      @books.each do |book|
+        next unless book.started_reading_at
+
+        virtual_filepath = "book_micro_posts/#{book.started_reading_at.strftime("%Y-%m-%d")}-#{book.title.downcase.gsub(" ", "_").gsub(/[^a-z0-9_]/i, '')}.html"
+        content = "Started reading #{book.title} by #{book.author}"
+
+        @micro_posts << MicroPost.new(directory: root, filepath: virtual_filepath, content: content)
+      end
+    end
+
     def generate_micro_posts
       LOGGER.debug "Site#generate_micro_posts"
 
       @micro_posts.each do
+        LOGGER.debug "  #{_1.filepath}"
+        generate_document(_1)
+      end
+    end
+
+    def generate_books
+      LOGGER.debug "Site#generate_books"
+
+      @books.each do
         LOGGER.debug "  #{_1.filepath}"
         generate_document(_1)
       end

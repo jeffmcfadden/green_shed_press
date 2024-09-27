@@ -58,6 +58,15 @@ class SiteGenerationTest < TLDR
     assert_equal true, File.exist?(File.join(@tmpdir, "micro_posts", "2024-09-01-000001.html"))
   end
 
+  def test_book_micropost_created
+    assert_equal true, File.exist?(File.join(@tmpdir, "micro_posts", "2024-06-19-the_way_of_kings.html"))
+  end
+
+  def test_book_post_created
+    assert_equal true, File.exist?(File.join(@tmpdir, "bookshelf", "the_way_of_kings.html"))
+  end
+
+
 
 
 end

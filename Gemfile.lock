@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    green_shed_press (0.1.10)
+    green_shed_press (0.2.1)
       activesupport
       async (>= 2.1)
       kramdown

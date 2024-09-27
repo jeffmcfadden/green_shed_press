@@ -3,10 +3,17 @@ module GSP
     attr_reader :filepath
     attr_accessor :content, :body, :frontmatter, :slug
 
-    def initialize(directory:, filepath:)
+    def initialize(directory:, filepath:, content: nil)
       @directory = directory
       @filepath = filepath
-      @content = File.open(File.join(@directory, @filepath)).read
+
+      # Allow content override for "virtual" documents
+      if content
+        @content = content
+      else
+        @content = File.open(File.join(@directory, @filepath)).read
+      end
+
       @body = ContentBodyExtractor.new(content: @content).body
       @frontmatter = FrontmatterExtractor.new(content: @content).frontmatter
     end
@@ -25,6 +32,10 @@ module GSP
 
     def output_filepath
       filepath
+    end
+
+    def url
+      self.output_filepath
     end
 
     def layout

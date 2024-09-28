@@ -211,9 +211,18 @@ module GSP
         next unless book.started_reading_at
 
         virtual_filepath = "book_micro_posts/#{book.started_reading_at.strftime("%Y-%m-%d")}-#{book.title.downcase.gsub(" ", "_").gsub(/[^a-z0-9_]/i, '')}.html"
-        content = "Started reading #{book.title} by #{book.author}"
 
-        @micro_posts << MicroPost.new(directory: root, filepath: virtual_filepath, content: content)
+        if partial(named: "started_reading_book")
+          content = "---\nlayout: micro_post\n---\n<%= partial 'started_reading_book', locals: { book: page.book } %>"
+        else
+          content = "---\nlayout: micro_post\n---\nStarted reading #{book.title} by #{book.author}"
+        end
+
+        mp = MicroPost.new(directory: root, filepath: virtual_filepath, content: content)
+
+        mp.frontmatter.book = book
+
+        @micro_posts << mp
       end
     end
 

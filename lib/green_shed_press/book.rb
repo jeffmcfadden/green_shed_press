@@ -1,8 +1,16 @@
 module GSP
   class Book < Document
-    extend Forwardable
+    def title; frontmatter.title; end
+    def author; frontmatter.author; end
+    def series; frontmatter.series; end
+    def series_position; frontmatter.series_position; end
+    def pages; frontmatter.pages; end
+    def rating; frontmatter.rating; end
 
-    def_delegators :frontmatter, :title, :author, :series, :series_position, :pages, :rating, :started_reading_at, :finished_reading_at, :asin
+    def started_reading_at; frontmatter.started_reading_at; end
+    def finished_reading_at; frontmatter.finished_reading_at; end
+    def asin; frontmatter.asin; end
+
 
     def layout; "book"; end
 

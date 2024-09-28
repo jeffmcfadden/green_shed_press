@@ -1,7 +1,7 @@
 module GSP
   class Document
     attr_reader :filepath
-    attr_accessor :content, :body, :frontmatter, :slug
+    attr_accessor :content, :body, :rendered_body_no_layout, :frontmatter, :slug
 
     def initialize(directory:, filepath:, content: nil)
       @directory = directory
@@ -15,6 +15,7 @@ module GSP
       end
 
       @body = ContentBodyExtractor.new(content: @content).body
+      @rendered_body_no_layout = nil
       @frontmatter = FrontmatterExtractor.new(content: @content).frontmatter
     end
 

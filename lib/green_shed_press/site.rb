@@ -352,6 +352,10 @@ module GSP
 
       rendered_content = ERB.new(template.body).result(render_context.instance_eval{ binding })
 
+      if template.respond_to?(:rendered_body_no_layout) && template.rendered_body_no_layout.nil?
+        template.rendered_body_no_layout = rendered_content
+      end
+
       if template.layout
         layout = layout(named: template.layout)
         unless layout

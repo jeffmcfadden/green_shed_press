@@ -48,7 +48,23 @@ module GSP
     end
 
     def date_from_filename
-      basename.match(/\d{4}-\d{2}-\d{2}/).to_s
+      # Try to match YYYY-mm-dd-HHMMSS.md (which is a typical micropost filename)
+      # Then try to match just YYYY-mm-dd-* (which is a typical post filename)
+      # Fallback to underscores just in case
+
+      if s = basename.match(/\d{4}-\d{2}-\d{2}-\d{6}/)
+        return Time.strptime(s.to_s, "%Y-%m-%d-%H%M%S")
+      end
+
+      if s = basename.match(/\d{4}-\d{2}-\d{2}/)
+        return Date.parse(s.to_s)
+      end
+
+      if s = basename.match(/\d{4}_\d{2}_\d{2}/)
+        return Date.parse(s.to_s.gsub("_", "-"))
+      end
+
+      ""
     end
 
     def created_at

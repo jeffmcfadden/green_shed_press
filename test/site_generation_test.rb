@@ -66,6 +66,21 @@ class SiteGenerationTest < TLDR
     assert_equal true, File.exist?(File.join(@tmpdir, "bookshelf", "the_way_of_kings.html"))
   end
 
+  def test_date_with_hyphens_from_filename
+    mp_1 = @site.micro_posts.find{ |mp| mp.basename(".*") == "2024-08-30" }
+    assert_equal Date.parse("2024-08-30"), mp_1.date_from_filename
+  end
+
+  def test_date_with_time_from_filename
+    mp_2 = @site.micro_posts.find{ |mp| mp.basename(".*") == "2024-09-01-000001" }
+    assert_equal Time.parse("2024-09-01 00:00:01"), mp_2.date_from_filename
+  end
+
+  def test_date_with_underscores_from_filename
+    mp_3 = @site.micro_posts.find{ |mp| mp.basename(".*") == "2024_08_29-blah" }
+    assert_equal Date.parse("2024-08-29"), mp_3.date_from_filename
+  end
+
 
 
 

@@ -1,6 +1,7 @@
 require 'async'
 require 'async/barrier'
 require 'async/semaphore'
+require 'dotenv'
 require 'erb'
 require 'fileutils'
 require 'json'
@@ -21,6 +22,8 @@ require "active_support/inflector"
 
 require_relative "version"
 
+Dotenv.load
+
 module GSP
   class Error < StandardError; end
   LOGGER = Logger.new($stdout)
@@ -36,6 +39,7 @@ module GSP
 end
 
 require_relative "green_shed_press/concerns/bodyable"
+require_relative "green_shed_press/concerns/crossposting"
 require_relative "green_shed_press/concerns/frontmatterable"
 require_relative "green_shed_press/concerns/content_loadable"
 require_relative "green_shed_press/concerns/layoutable"

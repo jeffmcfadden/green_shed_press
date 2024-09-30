@@ -9,6 +9,8 @@ module GSP
 
     FILES_TO_SKIP = ["site.yml"]
 
+    include Crossposting
+
     def initialize(config:, data_directory: nil)
       if config.is_a?(String)
         @data_directory = File.expand_path(File.dirname(config))
@@ -42,6 +44,10 @@ module GSP
 
     def posts_newest_first
       @posts.sort_by(&:created_at).reverse
+    end
+
+    def micro_posts_newest_first
+      @micro_posts.sort_by(&:created_at).reverse
     end
 
     def all_items_newest_first
@@ -413,6 +419,7 @@ module GSP
     def photo_set(titled:)
       @photo_sets.find { _1.title == titled }
     end
+
 
     private
 

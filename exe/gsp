@@ -25,6 +25,10 @@ options_parser = OptionParser.new do |opts|
     options[:watch] = true
   end
 
+  opts.on("-c", "--crosspost", "Crosspost to Social Media") do
+    options[:crosspost] = true
+  end
+
   opts.on("--verbose", "Verbose logging") do
     options[:verbose] = true
   end
@@ -53,6 +57,11 @@ generate_time = Time.now - generate_start_time
 puts "Load time: #{site_load_time.to_f.round(3)}s"
 puts "Generate time: #{generate_time.to_f.round(3)}s"
 
+if options[:crosspost]
+  puts "Crossposting to social media..."
+  site.crosspost
+end
+
 threads = []
 
 @watcher_pid = nil
@@ -79,6 +88,8 @@ if options[:server]
     @web_server.start
   end
 end
+
+
 
 trap 'INT' do
   puts "Exiting..."

@@ -42,7 +42,9 @@ end.parse!
 data_directory   = options[:output_directory] || "./data"
 output_directory = options[:output_directory] || "./output"
 
-GSP::LOGGER.level = Logger::DEBUG if options[:verbose]
+if options[:verbose]
+  GSP::LOGGER.level = Logger::DEBUG
+end
 
 site = GSP::Site.new(config: File.join(data_directory, "site.yml"))
 

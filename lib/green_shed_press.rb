@@ -27,7 +27,7 @@ Dotenv.load
 module GSP
   class Error < StandardError; end
   LOGGER = Logger.new($stdout)
-  LOGGER.level = Logger::DEBUG
+  LOGGER.level = Logger::INFO # Default
 
   def self.render_markdown(text)
     Kramdown::Document.new(text, { auto_ids: true,

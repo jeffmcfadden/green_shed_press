@@ -46,6 +46,46 @@ if options[:verbose]
   GSP::LOGGER.level = Logger::DEBUG
 end
 
+command = ARGV.shift || "generate"
+
+if command == "new"
+  if ARGV.first == "micropost"
+    ARGV.shift
+    post_content = ARGV.join(" ")
+    filepath = File.join(data_directory, "_micro_posts", Time.now.year.to_s, "#{Time.now.strftime("%Y-%m-%d-%H%M%S")}.md")
+    File.open(filepath, "w") do |file|
+      file.write post_content
+    end
+
+    puts "Micropost created at:\n#{filepath}\n\n"
+
+  else # Assume Post
+    ARGV.shift if ARGV.first == "post"
+    post_title = ARGV.join(" ")
+    post_slug = post_title.downcase.strip.gsub(" ", "-").gsub(/[^a-z0-9-]/, "")
+    filepath = File.join(data_directory, "_posts", Time.now.year.to_s, "#{Time.now.strftime("%Y-%m-%d")}-#{post_slug}.md")
+    File.open(filepath, "w") do |file|
+      file.write <<~POST
+        ---
+        title: #{post_title}
+        date: #{Time.now.iso8601}
+        ---
+      POST
+    end
+
+    puts "Post file created at:\n#{filepath}\n\n"
+  end
+
+  exit
+end
+
+if command != "generate"
+  puts "Command not recognized: #{command}"
+  exit 1
+end
+
+puts "Generating site..."
+
 site = GSP::Site.new(config: File.join(data_directory, "site.yml"))
 
 site_load_start_time = Time.now
@@ -90,8 +130,6 @@ if options[:server]
     @web_server.start
   end
 end
-
-
 
 trap 'INT' do
   puts "Exiting..."

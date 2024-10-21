@@ -59,9 +59,12 @@ module GSP
         LOGGER.debug "Crossposting: #{item.output_filepath}"
         LOGGER.debug "Post text: #{post_text}"
 
-        client.create_status(post_text)
-
-        crossposted_to_mastodon_log << item.output_filepath
+        begin
+          client.create_status(post_text)
+          crossposted_to_mastodon_log << item.output_filepath
+        rescue Mastodon::Error => e
+          LOGGER.error "!! Error crossposting to Mastodon: #{e}"
+        end
       end
 
       File.open(crossposted_to_mastodon_log_filepath, "w") do |f|

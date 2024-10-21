@@ -63,7 +63,7 @@ module GSP
           client.create_status(post_text)
           crossposted_to_mastodon_log << item.output_filepath
         rescue Mastodon::Error => e
-          LOGGER.error "!! Error crossposting to Mastodon: #{e}"
+          LOGGER.error "!! Error crossposting #{item.output_filepath} to Mastodon: #{e}"
         end
       end
 
